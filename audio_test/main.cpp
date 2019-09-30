@@ -353,22 +353,19 @@ int maina(void) {
     //initOutput(&data);
     return 0;
 }
-/*
+
 int main(int ac, char *av[]) {
     PortAudioRecorder recorder;
     PortAudioSpeaker speaker;
 
-    recorder.startRecording();
-    speaker.startSpeaking();
-
     while (true) {
-        auto records = recorder.getVoiceData();
+		auto records = recorder.sendSound();
         for (auto const &data : records)
         speaker.addData(records);
     }
 
     return 0;
-}*/
+}
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -405,7 +402,7 @@ int main(int ac, char *av[]) {
 #define PRINTF_S_FORMAT "%d"
 #endif
 /*******************************************************************/
-int main(void) // I/O BLOCKING
+int mainccc(void) // I/O BLOCKING
 {
     PaStreamParameters inputParameters, outputParameters;
     PaStream *stream = NULL;
