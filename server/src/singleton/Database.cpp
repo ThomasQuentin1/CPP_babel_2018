@@ -6,10 +6,11 @@
 #include "shared/exceptions/IOException.hpp"
 
 std::shared_ptr<Database> Database::that;
+std::string Database::file_name;
 
 
-Database::Database(const std::string &file) : _filename(file) {
-    std::ifstream f(file);
+Database::Database() {
+    std::ifstream f(file_name);
 
     if (!f.is_open())
         throw ex::IOException("Unable to open database file", "Database constructor");
@@ -33,7 +34,7 @@ auto Database::get() -> Database & {
 }
 
 auto Database::write(std::string const &username, std::string const &password) -> void {
-    std::ofstream f(_filename, std::ios::app);
+    std::ofstream f(file_name, std::ios::app);
 
     if (!f.is_open())
         throw ex::IOException("Unable to open database file", "Database writing");

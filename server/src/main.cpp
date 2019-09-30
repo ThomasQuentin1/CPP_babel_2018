@@ -3,6 +3,7 @@
 //
 
 #include <shared/packets.hpp>
+#include <server/src/singleton/Database.hpp>
 #include "BabelServer.hpp"
 #include "shared/network/WindowsInit.hpp"
 
@@ -13,12 +14,24 @@ void sig_handler(int sig) {
         sigint_recived = true;
 }
 
+inline bool file_exists(const std::string& name) {
+    std::ifstream f(name.c_str());
+    return f.good();
+}
 
 int main(int ac, char *av[]) try
 {
+    if (ac != 3) {
+        std::cerr << "Usage : " << av[0] << " port path_to_database_file" << std::endl;
+        return 84;
+    }
+    if (!file_exists(av[2])) {
+        std::cerr << "Your database file don't exists" << std::endl;
+        return 84;
+    }
+    Database::file_name = av[2];
 	network::WindowsInit wsa_init;
-    BabelServer server(9081);
-
+    BabelServer server(std::stoi(av[1]));
     std::cout << "Starting babel server on port 9081" << std::endl;
 
     signal(SIGINT, sig_handler);
