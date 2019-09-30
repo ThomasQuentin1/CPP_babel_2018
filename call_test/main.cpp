@@ -19,8 +19,8 @@ int main(int ac, char *av[]) try {
     //}
 
 	network::WindowsInit windows;
-	//network::UdpConnection connection("127.0.0.1", 8082, true);
-    network::UdpConnection connection(av[1], std::stoi(av[2]), !strcmp(av[3], "true"));
+	network::UdpConnection connection("10.14.57.18", 4242, true);
+    //network::UdpConnection connection(av[1], std::stoi(av[2]), !strcmp(av[3], "true"));
     //Opus encoder;
     PortAudioRecorder recorder;
     PortAudioSpeaker player;
@@ -52,7 +52,7 @@ int main(int ac, char *av[]) try {
 				recv_stack.pop_front();
 			auto data = connection.recv<packet::data>();
 			if (data->magic == 0XDA) {
-				auto packet = std::make_shared<SoundPacket>(audioConfig::frames_per_buffer * sizeof(double));
+				auto packet = std::make_shared<SoundPacket>(data->size);
 				packet->copyFrom(data->body, data->size);
 				recv_stack.push_back((packet));
 			}

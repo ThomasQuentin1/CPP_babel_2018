@@ -9,6 +9,10 @@
 #include <memory>
 #include <shared/types.hpp>
 
+static void del(void *that) {
+	delete[] that;
+}
+
 class IConnection {
 public:
     // Tempalte
@@ -19,7 +23,7 @@ public:
 
     template<typename T>
     auto recv() -> std::shared_ptr<T> {
-        return std::shared_ptr<T>(reinterpret_cast<T*>(recvData(sizeof(T))));
+        return std::shared_ptr<T>(reinterpret_cast<T*>(recvData(sizeof(T))), del);
     }
 
 protected:
