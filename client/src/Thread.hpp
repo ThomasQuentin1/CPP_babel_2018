@@ -26,8 +26,8 @@ private:
 template<typename T>
 Thread<T>::Thread(T *that) {
     this->thread = std::make_unique<std::thread>([that]() -> void {that->entryPoint();});
-    if (isThreadRunning)
-        this->
+	if (isThreadRunning)
+		this->isThreadRunning = true;
 }
 
 template<typename T>
