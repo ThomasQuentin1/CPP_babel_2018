@@ -12,29 +12,15 @@
 #include <mutex>
 #include "ISpeaker.hpp"
 #include "audioConfig.h"
+#include "PortAudio.hpp"
 
-class PortAudioSpeaker : public  ISpeaker{
+class PortAudioSpeaker : public  PortAudio {
 public:
-    PortAudioSpeaker(float volume = 1);
-    ~PortAudioSpeaker();
-    auto startSpeaking() -> void final;
-    auto stopSpeaking() -> void final ;
-    auto getVolume() -> float final;
-    auto getFrame() -> std::vector<std::vector<byte>> & final;
-    auto isSpeaking() -> bool final;
-    auto addData(std::vector<byte> &value) -> void final;
-    auto lockThread() -> void final;
-    auto unlockThread() -> void final;
-    auto addTestdata(paTestData *data) -> void;
-    auto playSound() -> void final;
 
-private:
-    float volume;
-    PaStream *stream;
-    bool speaking = false;
-    std::vector<std::vector<byte>> frame;
-    std::mutex thread;
-    paTestData *data;
+	PortAudioSpeaker();
+	auto play() -> void;
+	auto receiveSound() ->std::unique_ptr<SoundPacket>;
+
 };
 
 

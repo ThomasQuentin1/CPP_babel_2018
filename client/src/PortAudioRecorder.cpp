@@ -11,45 +11,7 @@
 
 PortAudioRecorder::PortAudioRecorder()
 {
-	PaStreamParameters inputParameters, outputParameters;
-	PaError err;
-	const PaDeviceInfo* inputInfo;
-	const PaDeviceInfo* outputInfo;
-	int numBytes;
-	int numChannels;
 
-	err = Pa_Initialize();
-	if (err != paNoError)
-		throw ex::SoundException("error");
-
-	inputParameters.device = Pa_GetDefaultInputDevice(); /* default input device */
-	inputInfo = Pa_GetDeviceInfo(inputParameters.device);
-
-	outputParameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
-	outputInfo = Pa_GetDeviceInfo(outputParameters.device);
-	numChannels = inputInfo->maxInputChannels < outputInfo->maxOutputChannels
-		? inputInfo->maxInputChannels : outputInfo->maxOutputChannels;
-	inputParameters.channelCount = numChannels;
-	inputParameters.sampleFormat = paFloat32;
-	inputParameters.suggestedLatency = inputInfo->defaultHighInputLatency;
-	inputParameters.hostApiSpecificStreamInfo = NULL;
-	outputParameters.channelCount = numChannels;
-	outputParameters.sampleFormat = paFloat32;
-	outputParameters.suggestedLatency = outputInfo->defaultHighOutputLatency;
-	outputParameters.hostApiSpecificStreamInfo = NULL;
-	/* -- setup -- */
-	err = Pa_OpenStream(
-		&this->stream,
-		&inputParameters,
-		&outputParameters,
-		audioConfig::sample_rate,
-		audioConfig::frames_per_buffer,
-		paClipOff,
-		NULL,
-		NULL);
-	if (err != paNoError)
-		throw ex::SoundException("error");
-	err = Pa_StartStream(stream);
 }
 
 auto PortAudioRecorder::record() -> void
@@ -60,14 +22,18 @@ auto PortAudioRecorder::record() -> void
 		stack.push_back(std::move(pck));
 }
 
-auto PortAudioRecorder::play() -> void
-{
-		Pa_WriteStream(stream, stack.front()->ptr<void*>(), audioConfig::frames_per_buffer);
-		stack.pop_front();
-		// return stack.front();
-}
 
 PortAudioRecorder::~PortAudioRecorder()
 {
 
 }
+
+auto PortAudioRecorder::sendSound(std::unique_ptr<SoundPacket> packet) -> void
+{
+	if (packet == nullptr)
+		return;
+	if (this->stack.size() > 100)
+		this->stack.pop_front();
+	this->stack.push_back(std::move(packet));
+}
+
