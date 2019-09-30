@@ -30,6 +30,8 @@ network::TcpConnection::TcpConnection(sock _s, sockaddr_in &_remote_addr) : remo
 }
 
 auto network::TcpConnection::sendData(bytes buffer, int size) -> int {
+	if (size == 0)
+		return 0;
     int ret = ::send(this->s, (char const*)buffer, size, MSG_NOSIGNAL);
     if (ret <= 0)
         throw ex::NetworkException("client disconnected", "send tcp data");
@@ -37,6 +39,8 @@ auto network::TcpConnection::sendData(bytes buffer, int size) -> int {
 }
 
 auto network::TcpConnection::recvData(int size) -> bytes {
+	if (size == 0)
+		return nullptr;
     if (this->buffer_size < size) {
         delete[] this->recv_buffer;
         this->recv_buffer = new byte[size + 1]();

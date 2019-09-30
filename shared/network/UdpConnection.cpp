@@ -19,6 +19,9 @@ network::UdpConnection::UdpConnection(std::string const &ip, short port, bool se
 
 auto network::UdpConnection::sendData(bytes buffer, int size) -> int {
     //timeout.check();
+	if (size == 0)
+		return 0;
+
     int ret = sendto(this->s, (char const *)buffer, size, MSG_NOSIGNAL, reinterpret_cast<const sockaddr*>(&this->addr), sizeof(this->addr));
     if (ret <= 0)
         throw ex::NetworkException("client disconnected", "send data");
@@ -27,6 +30,9 @@ auto network::UdpConnection::sendData(bytes buffer, int size) -> int {
 
 auto network::UdpConnection::recvData(int size) -> bytes {
     //timeout.check();
+
+	if (size == 0)
+		return nullptr;
     socklen_t addrsize = sizeof(this->addr);
 
     if (this->buffer_size < size) {
@@ -34,8 +40,9 @@ auto network::UdpConnection::recvData(int size) -> bytes {
         this->recv_buffer = new byte[size + 1]();
         this->buffer_size = size;
     }
-    int ret = recvfrom(this->s, (char*)this->recv_buffer, size, 0, reinterpret_cast<sockaddr*>(&this->addr),
+    int ret = recvfrom(this->s, (char*)this->recv_buffer, size, MSG_NOSIGNAL, reinterpret_cast<sockaddr*>(&this->addr),
                        &addrsize);
+	int err = GetLastError();
     if (ret == 0)
         throw ex::NetworkException("client disconnected", "recv data");
     if (ret != size)

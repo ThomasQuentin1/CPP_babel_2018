@@ -12,12 +12,13 @@
 #include <shared\network\WindowsInit.hpp>
 
 int main(int ac, char *av[]) try {
-    if (ac != 4) {
-        std::cout << "Usage : ./" << av[0] << " ip port isServer(true of false)" << std::endl;
-        return 84;
-    }
+    //if (ac != 4) {
+    //    std::cout << "Usage : ./" << av[0] << " ip port isServer(true of false)" << std::endl;
+    //    return 84;
+    //}
 
 	network::WindowsInit windows;
+	//network::UdpConnection connection("127.0.0.1", 8082, true);
     network::UdpConnection connection(av[1], std::stoi(av[2]), !strcmp(av[3], "true"));
     //Opus encoder;
     PortAudioRecorder recorder;
@@ -25,10 +26,6 @@ int main(int ac, char *av[]) try {
 
 	std::deque<std::unique_ptr<SoundPacket>> send_stack;
 	std::deque<std::unique_ptr<SoundPacket>> recv_stack;
-
-
-	recorder.record();
-	player.play();
 
 	std::cout << "Connect the other client and press enter" << std::endl;
 	getchar();
@@ -43,6 +40,7 @@ int main(int ac, char *av[]) try {
 		// Play sounds recived
 		if (!recv_stack.empty()) {
 			auto recived_sound = std::move(recv_stack.front());	
+			player.sendSound(std::move(recived_sound));
 		}
 
 
@@ -59,7 +57,11 @@ int main(int ac, char *av[]) try {
 		if (!send_stack.empty()) {
 			std::unique_ptr<SoundPacket> sound_packet = std::move(send_stack.front());
 			send_stack.pop_front();
-			connection.sendData(sound_packet->ptr(), sound_packet->dataSize());
+
+			packet::data sound_data;
+			sound_packet->copyTo(sound_data.body, sound_packet->dataSize());
+			sound_data.size = sound_packet->dataSize();
+			connection.sendData((bytes)&sound_data, sizeof(packet::data));
 		}
 	}
 }
