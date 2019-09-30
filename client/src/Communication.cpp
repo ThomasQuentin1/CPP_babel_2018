@@ -13,7 +13,7 @@ auto Communication::incommingCall() -> std::string const & {
 
 auto Communication::acceptCall() -> void {
     this->incomming_call_username = "";
-    this->client_connection = std::make_unique<network::UdpConnection>(this->incomming_call_ip, this->incomming_call_port, false);
+    this->client_connection = std::make_shared<network::UdpConnection>(this->incomming_call_ip, this->incomming_call_port, false);
 }
 
 auto Communication::declineCall() -> void {
@@ -35,20 +35,20 @@ auto Communication::isCalling() -> bool {
     return _isCalling;
 }
 
-auto Communication::reciveSound() -> std::unique_ptr<SoundPacket> {
+auto Communication::reciveSound() -> std::shared_ptr<SoundPacket> {
     if (this->recv_stack.empty())
         return nullptr;
-    auto data = std::move(this->recv_stack.front());
+    auto data = (this->recv_stack.front());
     recv_stack.pop_front();
     return data;
 }
 
-auto Communication::sendSound(std::unique_ptr<SoundPacket> packet) -> void {
+auto Communication::sendSound(std::shared_ptr<SoundPacket> packet) -> void {
     if (packet == nullptr)
         return;
     if (this->send_stack.size() > 100)
         this->send_stack.pop_front();
-    this->send_stack.push_back(std::move(packet));
+    this->send_stack.push_back((packet));
 }
 
 auto Communication::isCommunicating() -> bool {
@@ -63,7 +63,7 @@ auto Communication::refresh() -> void {
 }
 
 Communication::Communication(std::string const &ip, short port) {
-    this->server_connection = std::make_unique<network::TcpConnection>(ip, port);
+    this->server_connection = std::make_shared<network::TcpConnection>(ip, port);
 }
 
 auto Communication::parseIncommingCall(std::string const &body) -> void {
@@ -101,14 +101,14 @@ auto Communication::refreshClient() -> void {
             this->recv_stack.pop_front();
         auto data = this->client_connection->recv<packet::data>();
         if (data->magic == 0XDA) {
-            auto packet = std::make_unique<SoundPacket>(audioConfig::frames_per_buffer * sizeof(double));
+            auto packet = std::make_shared<SoundPacket>(audioConfig::frames_per_buffer * sizeof(double));
             packet->copyFrom(data->body, data->size);
-            this->recv_stack.push_back(std::move(packet));
+            this->recv_stack.push_back((packet));
         }
     }
 
     if (!this->send_stack.empty()) {
-        std::unique_ptr<SoundPacket> sound_packet = std::move(this->send_stack.front());
+        std::shared_ptr<SoundPacket> sound_packet = (this->send_stack.front());
         send_stack.pop_front();
         this->client_connection->sendData(sound_packet->ptr(), sound_packet->dataSize());
     }

@@ -24,14 +24,14 @@ network::TcpServer::TcpServer(short port) {
     }
 }
 
-auto network::TcpServer::accept() -> std::unique_ptr<network::TcpConnection> {
+auto network::TcpServer::accept() -> std::shared_ptr<network::TcpConnection> {
     struct sockaddr_in server = {0};
     socklen_t size = sizeof(server);
 
     sock clientSock = ::accept(this->s, (struct sockaddr *)&server, &size);
     if (clientSock == -1)
         throw ex::NetworkException("failed to accept client", "tcp server accept");
-    return std::make_unique<TcpConnection>(clientSock, server);
+    return std::make_shared<TcpConnection>(clientSock, server);
 }
 
 network::TcpServer::~TcpServer() {

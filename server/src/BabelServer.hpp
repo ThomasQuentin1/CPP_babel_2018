@@ -18,7 +18,7 @@ public:
 
 private:
     network::TcpServer server;
-    std::deque<std::unique_ptr<Client>> clients;
+    std::deque<std::shared_ptr<Client>> clients;
 };
 
 

@@ -33,7 +33,7 @@ void test_udp_send()
     memset(to_send.data, 0, sizeof(to_send.data));
     memcpy(to_send.data, "Bonjour, ceci est un test de data", strlen("Bonjour, ceci est un test de data"));
     sok.send<testPacket>(to_send);
-    std::unique_ptr<testPacket> to_recv = sok.recv<testPacket>();
+    std::shared_ptr<testPacket> to_recv = sok.recv<testPacket>();
     std::cout << to_recv->data << std::endl;
 }
 

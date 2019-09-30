@@ -8,14 +8,14 @@
 #include "Client.hpp"
 #include "shared/headers.hpp"
 
-Client::Client(std::unique_ptr<network::TcpConnection> &_connection) : connection(std::move(_connection)) {
+Client::Client(std::shared_ptr<network::TcpConnection> &_connection) : connection((_connection)) {
 }
 
 auto Client::isLoggedIn() -> bool {
     return this->loggedIn;
 }
 
-auto Client::process(std::deque<std::unique_ptr<Client>> &clients) -> bool try {
+auto Client::process(std::deque<std::shared_ptr<Client>> &clients) -> bool try {
     if (!connection->isReady())
         return true;
 
@@ -91,7 +91,7 @@ auto Client::operator==(std::string const &name) -> bool {
     return name == this->username;
 }
 
-auto Client::startCall(std::string const &body, std::deque<std::unique_ptr<Client>> &clients) -> void {
+auto Client::startCall(std::string const &body, std::deque<std::shared_ptr<Client>> &clients) -> void {
     std::string port;
     std::string target_name;
 
@@ -142,12 +142,12 @@ Client::~Client() {
     this->connection->sendAction(packet::operation::DISCONNECT);
 }
 
-auto Client::callEnd(std::deque<std::unique_ptr<Client>> &clients) -> void {
+auto Client::callEnd(std::deque<std::shared_ptr<Client>> &clients) -> void {
     auto incall = std::find(clients.begin(), clients.end(), inCallWith);
     if (incall != clients.end())
         (*incall)->connection->sendAction(packet::operation::CALL_END);
 }
 
-auto operator==(std::unique_ptr<Client> const &c, std::string const &s) -> bool {
+auto operator==(std::shared_ptr<Client> const &c, std::string const &s) -> bool {
     return *c == s;
 }

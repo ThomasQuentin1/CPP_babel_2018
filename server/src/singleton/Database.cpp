@@ -5,7 +5,7 @@
 #include "Database.hpp"
 #include "shared/exceptions/IOException.hpp"
 
-std::unique_ptr<Database> Database::that;
+std::shared_ptr<Database> Database::that;
 
 
 Database::Database(const std::string &file) : _filename(file) {
@@ -28,7 +28,7 @@ Database::Database(const std::string &file) : _filename(file) {
 
 auto Database::get() -> Database & {
     if (Database::that == nullptr)
-        Database::that = std::make_unique<Database>();
+        Database::that = std::make_shared<Database>();
     return *Database::that;
 }
 

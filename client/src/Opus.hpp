@@ -15,8 +15,8 @@ class Opus : public IEncoder {
 public:
     Opus();
     ~Opus();
-    auto encode(std::unique_ptr<SoundPacket> &packet) -> int;
-    auto decode(std::unique_ptr<SoundPacket> &packet) -> int;
+    auto encode(std::shared_ptr<SoundPacket> &packet) -> int;
+    auto decode(std::shared_ptr<SoundPacket> &packet) -> int;
 
 private:
     OpusEncoder *encoder;

@@ -18,8 +18,8 @@ public:
     }
 
     template<typename T>
-    auto recv() -> std::unique_ptr<T> {
-        return std::unique_ptr<T>(reinterpret_cast<T*>(recvData(sizeof(T))));
+    auto recv() -> std::shared_ptr<T> {
+        return std::shared_ptr<T>(reinterpret_cast<T*>(recvData(sizeof(T))));
     }
 
 protected:

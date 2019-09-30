@@ -28,8 +28,8 @@ public:
     auto isCommunicating() -> bool;
 
     // Sound functions
-    auto reciveSound() -> std::unique_ptr<SoundPacket>;
-    auto sendSound(std::unique_ptr<SoundPacket>) -> void;
+    auto reciveSound() -> std::shared_ptr<SoundPacket>;
+    auto sendSound(std::shared_ptr<SoundPacket>) -> void;
 
 private:
     auto parseIncommingCall(std::string const &body) -> void;
@@ -43,11 +43,11 @@ private:
     std::string outgoing_call_ip;
     short outgoing_call_port = 0;
 
-    std::unique_ptr<network::TcpConnection> server_connection;
-    std::unique_ptr<network::UdpConnection> client_connection;
+    std::shared_ptr<network::TcpConnection> server_connection;
+    std::shared_ptr<network::UdpConnection> client_connection;
 
-    std::deque<std::unique_ptr<SoundPacket>> send_stack;
-    std::deque<std::unique_ptr<SoundPacket>> recv_stack;
+    std::deque<std::shared_ptr<SoundPacket>> send_stack;
+    std::deque<std::shared_ptr<SoundPacket>> recv_stack;
 
     bool _isCalling = false;
 

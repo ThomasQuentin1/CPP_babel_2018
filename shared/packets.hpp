@@ -14,7 +14,7 @@ namespace packet
         unsigned short magic = 0xDA;
         int date;
         short size;
-        byte body[1024];
+        byte body[5024];
     };
 
     struct action // TCP
