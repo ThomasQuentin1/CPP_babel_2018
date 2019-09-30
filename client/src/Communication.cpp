@@ -113,3 +113,30 @@ auto Communication::refreshClient() -> void {
         this->client_connection->sendData(sound_packet->ptr(), sound_packet->dataSize());
     }
 }
+
+auto Communication::login(std::string const &loginAndPassword) -> bool
+{
+    this->server_connection->sendAction(packet::operation::LOGIN, loginAndPassword);
+    auto action = this->server_connection->recvAction();
+    if (action.code() != packet::operation::OK) {
+        return (true);
+    } else {
+        return (false);
+    }
+}
+
+auto Communication::signUp(std::string const &loginAndPassword) -> bool
+{
+    this->server_connection->sendAction(packet::operation::REGISTER, loginAndPassword);
+    auto action = this->server_connection->recvAction();
+    if (action.code() != packet::operation::OK) {
+        return (true);
+    } else {
+        return (false);
+    }
+}
+
+auto Communication::getOnlineUsers() -> std::string &
+{
+
+}

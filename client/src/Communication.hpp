@@ -31,6 +31,13 @@ public:
     auto reciveSound() -> std::shared_ptr<SoundPacket>;
     auto sendSound(std::shared_ptr<SoundPacket>) -> void;
 
+    //connection
+    auto login(std::string const &loginAndPassword) -> bool;
+    auto signUp(std::string const &loginAndPassword) -> bool;
+
+    //users
+    auto getOnlineUsers() -> std::string &;
+
 private:
     auto parseIncommingCall(std::string const &body) -> void;
     auto refreshServer() -> void;

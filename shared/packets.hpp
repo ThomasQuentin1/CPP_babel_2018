@@ -35,6 +35,7 @@ namespace packet
         CALL_START,     // 5
         CALL_END,       // 6
         INCOMMING_CALL, // 7
+        GET_CONTACTS    // 8
     };
 }
 
