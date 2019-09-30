@@ -20,13 +20,13 @@ auto PortAudioSpeaker::play() -> void
 	stack.pop_front();
 }
 
-auto PortAudioSpeaker::receiveSound() -> std::unique_ptr<SoundPacket>
+auto PortAudioSpeaker::sendSound(std::unique_ptr<SoundPacket> packet) -> void
 {
-	if (this->stack.empty())
-		return nullptr;
-	auto data = std::move(this->stack.front());
-	stack.pop_front();
-	return data;
+	if (packet == nullptr)
+		return;
+	if (this->stack.size() > 100)
+		this->stack.pop_front();
+	this->stack.push_back(std::move(packet));
 }
 
 auto PortAudioSpeaker::entryPoint() -> void

@@ -20,22 +20,22 @@ auto PortAudioRecorder::record() -> void
 		return;
 	std::unique_ptr<SoundPacket> pck(new SoundPacket(audioConfig::frames_per_buffer * sizeof(double) + 1));
 	Pa_ReadStream(stream, pck->ptr<void*>(), audioConfig::frames_per_buffer);
+	pck->setDataSize(audioConfig::frames_per_buffer * sizeof(double) + 1);
 	stack.push_back(std::move(pck));
 }
 
+auto PortAudioRecorder::receiveSound() -> std::unique_ptr<SoundPacket>
+{
+	if (this->stack.empty())
+		return nullptr;
+	auto data = std::move(this->stack.front());
+	stack.pop_front();
+	return data;
+}
 
 PortAudioRecorder::~PortAudioRecorder()
 {
 
-}
-
-auto PortAudioRecorder::sendSound(std::unique_ptr<SoundPacket> packet) -> void
-{
-	if (packet == nullptr)
-		return;
-	if (this->stack.size() > 100)
-		this->stack.pop_front();
-	this->stack.push_back(std::move(packet));
 }
 
 auto PortAudioRecorder::entryPoint() -> void

@@ -8,14 +8,18 @@
 #include <client/src/PortAudioSpeaker.hpp>
 #include <client/src/Opus.hpp>
 #include <shared\packets.hpp>
+#include <shared\exceptions\NetworkException.hpp>
+#include <shared\network\WindowsInit.hpp>
 
-int main(int ac, char *av[]) {
+int main(int ac, char *av[]) try {
     if (ac != 4) {
         std::cout << "Usage : ./" << av[0] << " ip port isServer(true of false)" << std::endl;
         return 84;
     }
+
+	network::WindowsInit windows;
     network::UdpConnection connection(av[1], std::stoi(av[2]), !strcmp(av[3], "true"));
-    Opus encoder;
+    //Opus encoder;
     PortAudioRecorder recorder;
     PortAudioSpeaker player;
 
@@ -23,17 +27,22 @@ int main(int ac, char *av[]) {
 	std::deque<std::unique_ptr<SoundPacket>> recv_stack;
 
 
+	recorder.record();
+	player.play();
+
+	std::cout << "Connect the other client and press enter" << std::endl;
+	getchar();
+
 	while (true) {
 
 		// Get recorded sounds from mic
-		auto recorded_sound = recorder;
+		auto recorded_sound = recorder.receiveSound();
 		if (recorded_sound != nullptr)
 			send_stack.push_back(std::move(recorded_sound));
 		
 		// Play sounds recived
 		if (!recv_stack.empty()) {
-			auto recived_sound = std::move(recv_stack.front());
-			
+			auto recived_sound = std::move(recv_stack.front());	
 		}
 
 
@@ -53,6 +62,7 @@ int main(int ac, char *av[]) {
 			connection.sendData(sound_packet->ptr(), sound_packet->dataSize());
 		}
 	}
-
-
+}
+catch (ex::NetworkException &ex) {
+	std::cout << ex.what() << " " << ex.what() << std::endl;
 }

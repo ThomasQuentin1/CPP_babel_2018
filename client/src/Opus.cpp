@@ -9,11 +9,11 @@ Opus::Opus() {
     int err;
     encoder = opus_encoder_create(audioConfig::sample_rate, audioConfig::channels, OPUS_APPLICATION_AUDIO, &err);
     if (err < 0)
-        throw ex::SoundException(std::string("failed to initialize encoder: ") + opus_strerror(err), "Opus constructor");
+        throw ex::SoundException("failed to initialize encoder: ", "Opus constructor");
 
     decoder = opus_decoder_create(audioConfig::sample_rate, audioConfig::channels, &err);
     if (err<0)
-        throw ex::SoundException(std::string("failed to initialize decoder: ") + opus_strerror(err), "Opus constructor");
+        throw ex::SoundException("failed to initialize decoder: ", "Opus constructor");
 }
 
 Opus::~Opus() {

@@ -21,7 +21,7 @@ public:
 
 	PortAudioSpeaker();
 	auto play() -> void;
-	auto receiveSound() ->std::unique_ptr<SoundPacket>;
+	auto sendSound(std::unique_ptr<SoundPacket> packet) -> void;
 	auto entryPoint() -> void;
 
 

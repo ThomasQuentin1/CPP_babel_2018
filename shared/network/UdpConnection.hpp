@@ -26,7 +26,7 @@ namespace network {
         sockaddr_in addr;
         bytes recv_buffer = nullptr;
         int buffer_size = 0;
-        Timeout timeout;
+        //Timeout timeout;
     };
 
 }
