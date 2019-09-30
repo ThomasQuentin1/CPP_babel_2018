@@ -136,7 +136,14 @@ auto Communication::signUp(std::string const &loginAndPassword) -> bool
     }
 }
 
-auto Communication::getOnlineUsers() -> std::string &
+auto Communication::getOnlineUsers() -> std::string
 {
+    this->server_connection->sendAction(packet::operation::GET_CONTACTS);
+    auto resp = this->server_connection->recvAction();
+    return resp.body();
+}
 
+auto Communication::endCall() -> void {
+    this->server_connection->sendAction(packet::operation::CALL_END);
+    this->client_connection = nullptr;
 }

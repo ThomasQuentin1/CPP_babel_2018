@@ -24,6 +24,7 @@ public:
 
     // Outgoing call function
     auto call(std::string const &name) -> void;
+    auto endCall() -> void;
     auto isCalling() -> bool;
     auto isCommunicating() -> bool;
 
@@ -36,7 +37,7 @@ public:
     auto signUp(std::string const &loginAndPassword) -> bool;
 
     //users
-    auto getOnlineUsers() -> std::string &;
+    auto getOnlineUsers() -> std::string;
 
 private:
     auto parseIncommingCall(std::string const &body) -> void;

@@ -29,6 +29,7 @@ private:
     auto register_(std::string const &body) -> int;
     auto callEnd(std::deque<std::shared_ptr<Client>> &) -> void;
     auto startCall(std::string const &body, std::deque<std::shared_ptr<Client>> &clients) -> void;
+    auto listUsers(std::deque<std::shared_ptr<Client>>&) -> std::string;
 
     // Internal variables
     bool loggedIn = false;

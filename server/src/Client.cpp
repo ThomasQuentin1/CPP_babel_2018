@@ -46,6 +46,16 @@ auto Client::process(std::deque<std::shared_ptr<Client>> &clients) -> bool try {
             this->callEnd(clients);
             break;
 
+        case packet::operation::GET_CONTACTS:
+            this->connection->sendAction(packet::operation::DATA, this->listUsers(clients));
+            break;
+
+        case packet::operation::LOGOUT:
+            this->connection->sendAction(packet::operation::OK);
+            this->username = "unknown";
+            this->loggedIn = false;
+            break;
+
         default:
             this->connection->sendAction(packet::operation::KO, "invalid operation");
     }
@@ -85,6 +95,7 @@ auto Client::login(std::string const &user) -> int {
             loggedIn = true;
             return 0; // bad user/pass
     }
+    return 0;
 }
 
 auto Client::operator==(std::string const &name) -> bool {
@@ -139,13 +150,25 @@ auto Client::register_(std::string const &body) -> int {
 }
 
 Client::~Client() {
-    this->connection->sendAction(packet::operation::DISCONNECT);
+    try {
+        this->connection->sendAction(packet::operation::DISCONNECT);
+    } catch (...) {} // Ignore error if can't send packet
 }
 
 auto Client::callEnd(std::deque<std::shared_ptr<Client>> &clients) -> void {
     auto incall = std::find(clients.begin(), clients.end(), inCallWith);
     if (incall != clients.end())
         (*incall)->connection->sendAction(packet::operation::CALL_END);
+}
+
+auto Client::listUsers(std::deque<std::shared_ptr<Client>> &clients) -> std::string {
+    std::string list;
+
+    for (auto const &c : clients) {
+        list += c->username;
+        list += "\n";
+    }
+    return list;
 }
 
 auto operator==(std::shared_ptr<Client> const &c, std::string const &s) -> bool {
