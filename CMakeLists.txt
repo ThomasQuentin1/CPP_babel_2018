@@ -26,7 +26,7 @@ file(GLOB DLLS "${CMAKE_SOURCE_DIR}/lib/dll/*.dll")
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-find_package(Qt5Widgets CONFIG REQUIRED)
+#find_package(Qt5Widgets CONFIG REQUIRED)
 
 include_directories(${CMAKE_INCLUDE_PATH})
 
@@ -37,7 +37,7 @@ add_executable(audio_test audio_test/main.cpp client/src/PortAudioRecorder.cpp c
 add_executable(call_test shared/exceptions/UserException.cpp shared/exceptions/UserException.hpp call_test/main.cpp client/src/Opus.cpp client/src/Opus.hpp shared/types.hpp shared/exceptions/SoundException.cpp shared/exceptions/SoundException.hpp shared/packets.hpp shared/network/TcpConnection.cpp shared/network/TcpConnection.hpp shared/network/UdpConnection.cpp shared/network/UdpConnection.hpp shared/network/TcpServer.cpp shared/network/TcpServer.hpp shared/network/IPollable.cpp shared/network/IPollable.hpp shared/network/Timeout.cpp shared/network/Timeout.hpp shared/network/UdpProxy.cpp shared/network/UdpProxy.hpp shared/network/IConnection.cpp shared/network/IConnection.hpp shared/network/ActionDyn.cpp shared/network/ActionDyn.hpp client/src/IRecorder.hpp client/src/ISpeaker.hpp client/src/PortAudioSpeaker.cpp client/src/PortAudioSpeaker.hpp client/src/PortAudioRecorder.cpp client/src/PortAudioRecorder.hpp client/src/audioConfig.h shared/network/TcpConnection.cpp shared/exceptions/NetworkException.cpp client/src/IEncoder.hpp client/src/Communication.cpp client/src/Communication.hpp shared/SoundPacket.cpp shared/SoundPacket.hpp shared/exceptions/UserException.hpp shared/exceptions/UserException.cpp client/src/Thread.cpp client/src/Thread.hpp client/src/PortAudio.cpp client/src/PortAudio.hpp)
 
 
-target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets)
+#target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets)
 target_link_libraries(call_test ${CONAN_LIBS})
 target_link_libraries(audio_test ${CONAN_LIBS})
 if(WIN32)
