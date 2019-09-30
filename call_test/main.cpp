@@ -24,8 +24,8 @@ int main(int ac, char *av[]) try {
     PortAudioRecorder recorder;
     PortAudioSpeaker player;
 
-	std::deque<std::unique_ptr<SoundPacket>> send_stack;
-	std::deque<std::unique_ptr<SoundPacket>> recv_stack;
+	std::deque<std::shared_ptr<SoundPacket>> send_stack;
+	std::deque<std::shared_ptr<SoundPacket>> recv_stack;
 
 	std::cout << "Connect the other client and press enter" << std::endl;
 	getchar();
@@ -35,27 +35,29 @@ int main(int ac, char *av[]) try {
 		// Get recorded sounds from mic
 		auto recorded_sound = recorder.receiveSound();
 		if (recorded_sound != nullptr)
-			send_stack.push_back(std::move(recorded_sound));
+			send_stack.push_back((recorded_sound));
 		
 		// Play sounds recived
 		if (!recv_stack.empty()) {
-			auto recived_sound = std::move(recv_stack.front());	
-			player.sendSound(std::move(recived_sound));
+			auto recived_sound = (recv_stack.front());	
+			recv_stack.pop_front();
+			player.sendSound((recived_sound));
 		}
 
 
 		if (connection.isReady()) {
+			std::cout << "Recived some data" << std::endl;
 			if (recv_stack.size() > 100)
 				recv_stack.pop_front();
 			auto data = connection.recv<packet::data>();
 			if (data->magic == 0XDA) {
-				auto packet = std::make_unique<SoundPacket>(audioConfig::frames_per_buffer * sizeof(double));
+				auto packet = std::make_shared<SoundPacket>(audioConfig::frames_per_buffer * sizeof(double));
 				packet->copyFrom(data->body, data->size);
-				recv_stack.push_back(std::move(packet));
+				recv_stack.push_back((packet));
 			}
 		}
 		if (!send_stack.empty()) {
-			std::unique_ptr<SoundPacket> sound_packet = std::move(send_stack.front());
+			std::shared_ptr<SoundPacket> sound_packet = (send_stack.front());
 			send_stack.pop_front();
 
 			packet::data sound_data;

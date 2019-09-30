@@ -21,13 +21,13 @@ private:
     auto join() -> void;
     bool loop = true;
     bool isThreadRunning = false;
-    std::unique_ptr<std::thread> thread;
+    std::shared_ptr<std::thread> thread;
 	std::mutex _lock;
 };
 
 template<typename T>
 Thread<T>::Thread(T *that) {
-    this->thread = std::make_unique<std::thread>([that]() -> void {that->entryPoint();});
+    this->thread = std::make_shared<std::thread>([that]() -> void {that->entryPoint();});
 	if (!isThreadRunning)
 		this->isThreadRunning = true;
 	else

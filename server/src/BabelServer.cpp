@@ -9,7 +9,7 @@ auto BabelServer::refresh() -> int {
     try {
         if (server.isReady()) {
             auto connection = server.accept();
-            clients.emplace_back(std::make_unique<Client>(connection));
+            clients.emplace_back(std::make_shared<Client>(connection));
         }
     } catch (ex::NetworkException &ex) {
         std::cerr << "Network error during accepting a client " << ex.what() << std::endl;

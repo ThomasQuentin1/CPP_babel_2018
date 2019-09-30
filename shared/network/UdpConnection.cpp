@@ -42,8 +42,7 @@ auto network::UdpConnection::recvData(int size) -> bytes {
     }
     int ret = recvfrom(this->s, (char*)this->recv_buffer, size, MSG_NOSIGNAL, reinterpret_cast<sockaddr*>(&this->addr),
                        &addrsize);
-	int err = GetLastError();
-    if (ret == 0)
+    if (ret < 0)
         throw ex::NetworkException("client disconnected", "recv data");
     if (ret != size)
         return nullptr;
@@ -64,6 +63,7 @@ auto network::UdpConnection::bind(short port) -> void {
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = INADDR_ANY;
     servaddr.sin_port = htons(port);
+	//servaddr.sin_port = htons(8091);
     int res = ::bind(s, reinterpret_cast<sockaddr*>(&servaddr), sizeof(servaddr));
     if (res)
         throw ex::NetworkException("Can't use address", "UDP connection");

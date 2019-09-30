@@ -6,23 +6,23 @@
 #include "SoundPacket.hpp"
 
 SoundPacket::SoundPacket(short _size_) : alloc_size(_size_), data_size(0) {
-    this->data = new byte[alloc_size];
+	this->data = std::shared_ptr<byte>(new byte[alloc_size]);
 }
 
 SoundPacket::~SoundPacket() {
-    delete[] this->data;
+	std::cout << "Deleting " << this << std::endl;
 }
 
 auto SoundPacket::ptr() -> bytes {
-    return this->data;
+    return this->data.get();
 }
 
 auto SoundPacket::copyFrom(bytes from, short size) -> void {
-    memcpy(this->data, from, size);
+    memcpy(this->data.get(), from, size);
 }
 
 auto SoundPacket::copyTo(bytes to, short size) -> void {
-    memcpy(to, this->data, size);
+    memcpy(to, this->data.get(), size);
     this->data_size = size;
 }
 

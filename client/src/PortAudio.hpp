@@ -14,7 +14,7 @@ public:
 	PortAudio();
 protected:
 	PaStream* stream = NULL;
-	std::deque<std::unique_ptr<SoundPacket>> stack;
+	std::deque<std::shared_ptr<SoundPacket>> stack;
 };
 
 

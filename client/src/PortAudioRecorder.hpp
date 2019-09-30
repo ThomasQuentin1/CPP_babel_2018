@@ -21,7 +21,7 @@ public:
 	explicit PortAudioRecorder();
 	auto record() ->void;
 	~PortAudioRecorder();
-	auto receiveSound()->std::unique_ptr<SoundPacket>;
+	auto receiveSound()->std::shared_ptr<SoundPacket>;
 	auto entryPoint() -> void;
 
 private:

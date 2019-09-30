@@ -18,7 +18,7 @@ namespace network {
         TcpServer(TcpServer const &) = delete;
         ~TcpServer();
 
-        auto accept() -> std::unique_ptr<network::TcpConnection>;
+        auto accept() -> std::shared_ptr<network::TcpConnection>;
     };
 
 }

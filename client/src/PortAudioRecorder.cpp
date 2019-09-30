@@ -18,20 +18,20 @@ auto PortAudioRecorder::record() -> void
 {
 	if (this->stack.size() >= 100)
 		return;
-	std::unique_ptr<SoundPacket> pck(new SoundPacket(audioConfig::frames_per_buffer * sizeof(double) + 1));
+	std::shared_ptr<SoundPacket> pck(new SoundPacket(audioConfig::frames_per_buffer * sizeof(double) + 1));
 	Pa_ReadStream(stream, pck->ptr<void*>(), audioConfig::frames_per_buffer);
 	pck->setDataSize(audioConfig::frames_per_buffer * sizeof(double) + 1);
 	_thread.lock().lock();
-	stack.push_back(std::move(pck));
+	stack.push_back((pck));
 	_thread.lock().unlock();
 }
 
-auto PortAudioRecorder::receiveSound() -> std::unique_ptr<SoundPacket>
+auto PortAudioRecorder::receiveSound() -> std::shared_ptr<SoundPacket>
 {
 	if (this->stack.empty())
 		return nullptr;
 	_thread.lock().lock();
-	auto data = std::move(this->stack.front());
+	auto data = (this->stack.front());
 	stack.pop_front();
 	_thread.lock().unlock();
 	return data;
