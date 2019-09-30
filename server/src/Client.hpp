@@ -1,0 +1,45 @@
+//
+// Created by tom on 9/21/19.
+//
+
+#ifndef BABEL_CLIENT_HPP
+#define BABEL_CLIENT_HPP
+
+
+#include <shared/network/TcpConnection.hpp>
+#include <shared/network/UdpProxy.hpp>
+#include <deque>
+
+class Client {
+public:
+    explicit Client(std::unique_ptr<network::TcpConnection> &_connection);
+
+    Client(Client const &) = delete; // Copy
+    Client(Client &&) = default; // move
+    ~Client();
+
+    auto isLoggedIn() -> bool;
+    auto process(std::deque<std::unique_ptr<Client>> &clients) -> bool; // Return false if client is disconnected
+
+    auto operator==(std::string const &name) -> bool;
+
+private:
+    // Functions
+    auto login(std::string const &body) -> int;
+    auto register_(std::string const &body) -> int;
+    auto callEnd(std::deque<std::unique_ptr<Client>> &) -> void;
+    auto startCall(std::string const &body, std::deque<std::unique_ptr<Client>> &clients) -> void;
+
+    // Internal variables
+    bool loggedIn = false;
+    std::unique_ptr<network::TcpConnection> connection;
+    std::unique_ptr<network::UdpProxy> proxy = nullptr;
+    std::string inCallWith;
+
+    // Client infos
+    std::string username = "unknown";
+};
+
+auto operator==(std::unique_ptr<Client> const &, std::string const &) -> bool;
+
+#endif //BABEL_CLIENT_HPP
