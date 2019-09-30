@@ -13,6 +13,8 @@
 #include "ISpeaker.hpp"
 #include "audioConfig.h"
 #include "PortAudio.hpp"
+#include <client\src\Thread.hpp>
+
 
 class PortAudioSpeaker : public  PortAudio {
 public:
@@ -20,7 +22,11 @@ public:
 	PortAudioSpeaker();
 	auto play() -> void;
 	auto receiveSound() ->std::unique_ptr<SoundPacket>;
+	auto entryPoint() -> void;
 
+
+private:
+	Thread<PortAudioSpeaker> _thread;
 };
 
 

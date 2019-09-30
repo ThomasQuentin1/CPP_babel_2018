@@ -13,6 +13,7 @@
 #include <deque>
 #include "../../shared/SoundPacket.hpp"
 #include "PortAudio.hpp"
+#include <client\src\Thread.hpp>
 
 
 class PortAudioRecorder : public PortAudio {
@@ -21,6 +22,10 @@ public:
 	auto record() ->void;
 	~PortAudioRecorder();
 	auto sendSound(std::unique_ptr<SoundPacket> packet) -> void;
+	auto entryPoint() -> void;
+
+private:
+	Thread<PortAudioRecorder> _thread;
 
 };
 
