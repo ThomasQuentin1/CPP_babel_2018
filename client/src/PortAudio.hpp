@@ -4,9 +4,9 @@
 
 #ifndef BABEL_PORTAUDIO_HPP
 	#define BABEL_PORTAUDIO_HPP
-#include "../shared/headers.hpp"
+#include "shared/headers.hpp"
 #include <portaudio.h>
-#include <shared\SoundPacket.hpp>
+#include <shared/SoundPacket.hpp>
 
 class PortAudio {
 

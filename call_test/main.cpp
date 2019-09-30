@@ -7,9 +7,10 @@
 #include <client/src/PortAudioRecorder.hpp>
 #include <client/src/PortAudioSpeaker.hpp>
 #include <client/src/Opus.hpp>
-#include <shared\packets.hpp>
-#include <shared\exceptions\NetworkException.hpp>
-#include <shared\network\WindowsInit.hpp>
+#include <shared/packets.hpp>
+#include <shared/exceptions/NetworkException.hpp>
+#include <shared/network/WindowsInit.hpp>
+#include <cstring>
 
 int main(int ac, char *av[]) try {
     //if (ac != 4) {

@@ -13,7 +13,7 @@
 #include "ISpeaker.hpp"
 #include "audioConfig.h"
 #include "PortAudio.hpp"
-#include <client\src\Thread.hpp>
+#include <client/src/Thread.hpp>
 
 
 class PortAudioSpeaker : public  PortAudio {

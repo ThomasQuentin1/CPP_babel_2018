@@ -13,7 +13,7 @@
 #include <deque>
 #include "../../shared/SoundPacket.hpp"
 #include "PortAudio.hpp"
-#include <client\src\Thread.hpp>
+#include <client/src/Thread.hpp>
 
 
 class PortAudioRecorder : public PortAudio {
