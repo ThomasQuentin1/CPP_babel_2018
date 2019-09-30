@@ -3,8 +3,8 @@
 //
 
 #include "PortAudio.hpp"
-#include <shared\exceptions\SoundException.hpp>
-#include <client\src\audioConfig.h>
+#include <shared/exceptions/SoundException.hpp>
+#include <client/src/audioConfig.h>
 
 PortAudio::PortAudio()
 {
