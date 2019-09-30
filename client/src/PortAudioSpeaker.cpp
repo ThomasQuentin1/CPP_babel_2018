@@ -19,7 +19,7 @@ auto PortAudioSpeaker::play() -> void
 	_thread.lock().lock();
 	std::shared_ptr<SoundPacket> sound = (stack.front());
 	stack.pop_front();
-	Pa_WriteStream(stream, sound->ptr<void*>(), audioConfig::frames_per_buffer);
+	//Pa_WriteStream(stream, sound->ptr<void*>(), audioConfig::frames_per_buffer);
 	_thread.lock().unlock();
 }
 

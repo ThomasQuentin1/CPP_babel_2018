@@ -19,7 +19,7 @@ public:
 
     template <typename T>
     auto ptr() -> T { // Handle with care
-        return reinterpret_cast<T>(this->data.get());
+        return reinterpret_cast<T>(this->data);
     }
 
     auto copyFrom(bytes, short size) -> void;
@@ -29,7 +29,7 @@ public:
     auto allocSize() -> short;
 
 private:
-    std::shared_ptr<byte> data;
+    bytes data;
     short data_size;
     short alloc_size;
 };
