@@ -165,10 +165,13 @@ auto Client::listUsers(std::deque<std::shared_ptr<Client>> &clients) -> std::str
     std::string list;
 
     for (auto const &c : clients) {
-        list += c->username;
-        list += "\n";
+        if ((!(c == this->username)) && (!(c == "unknown"))) {
+            list += c->username;
+            list += "\n";
+        }
     }
-    return list;
+    std::cout << this->username << " ---------- " << list << std::endl;
+    return (!list.empty() && list[list.size() - 1] == '\n') ? list.substr(0, list.size() - 1) : list;
 }
 
 auto operator==(std::shared_ptr<Client> const &c, std::string const &s) -> bool {
