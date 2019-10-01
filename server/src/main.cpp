@@ -32,7 +32,7 @@ int main(int ac, char *av[]) try
     Database::file_name = av[2];
 	network::WindowsInit wsa_init;
     BabelServer server(std::stoi(av[1]));
-    std::cout << "Starting babel server on port 9081" << std::endl;
+    std::cout << "Starting babel server on port " << av[1] << std::endl;
 
     signal(SIGINT, sig_handler);
 

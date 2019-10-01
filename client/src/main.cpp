@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "portaudio.h"
+#include "core.hpp"
+
 /* #define SAMPLE_RATE  (17932) // Test failure to open with this value. */
 #define SAMPLE_RATE       (44100)
 #define FRAMES_PER_BUFFER   (512)
@@ -152,6 +154,9 @@ auto blbl() ->void {
 
 int main(int ac, char *av[]) try
 {
+    Core core(ac, av);
+
+    core.loop();
     // Entry point of the program
     // auto err = Pa_Initialize();
 
