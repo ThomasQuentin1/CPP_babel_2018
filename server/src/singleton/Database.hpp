@@ -10,20 +10,20 @@
 #include <unordered_map>
 #include <fstream>
 
-#define DATABASE_FILE "C:\\Users\\Tom\\Documents\\db.txt"
 
 class Database {
 public:
     static auto get() -> Database&;
-    explicit Database(std::string const &file = DATABASE_FILE);
+    explicit Database();
     ~Database();
 
     auto write(std::string const &username, std::string const &password) -> void;
     auto read(std::string const &username, std::string const &password) -> short; // 0 = KO; 1 = good username; 2 = good username/password
+
+    static std::string file_name;
 private:
     static std::shared_ptr<Database> that;
     std::unordered_map<std::string, std::string> db;
-    std::string _filename;
 };
 
 

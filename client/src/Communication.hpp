@@ -13,7 +13,7 @@
 
 class Communication {
 public:
-    explicit Communication(std::string const &ip = "127.0.0.1", short port = 9081);
+    explicit Communication(std::string const &ip = "10.14.58.106", short port = 4242);
 
     auto refresh() -> void;
 
@@ -24,12 +24,20 @@ public:
 
     // Outgoing call function
     auto call(std::string const &name) -> void;
+    auto endCall() -> void;
     auto isCalling() -> bool;
     auto isCommunicating() -> bool;
 
     // Sound functions
     auto reciveSound() -> std::shared_ptr<SoundPacket>;
     auto sendSound(std::shared_ptr<SoundPacket>) -> void;
+
+    //connection
+    auto login(std::string const &loginAndPassword) -> bool;
+    auto signUp(std::string const &loginAndPassword) -> bool;
+
+    //users
+    auto getOnlineUsers() -> std::string;
 
 private:
     auto parseIncommingCall(std::string const &body) -> void;
