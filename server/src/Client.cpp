@@ -9,6 +9,7 @@
 #include "shared/headers.hpp"
 
 Client::Client(std::shared_ptr<network::TcpConnection> &_connection) : connection((_connection)) {
+    std::cout << "[" + this->username + "]" << std::setw(20) << "connected" << std::endl;
 }
 
 auto Client::isLoggedIn() -> bool {
@@ -52,6 +53,7 @@ auto Client::process(std::deque<std::shared_ptr<Client>> &clients) -> bool try {
 
         case packet::operation::LOGOUT:
             this->connection->sendAction(packet::operation::OK);
+            std::cout << "[" + this->username + "]" << std::setw(20) << "logged out " << std::endl;
             this->username = "unknown";
             this->loggedIn = false;
             break;
@@ -85,14 +87,15 @@ auto Client::login(std::string const &user) -> int {
             this->loggedIn = true;
             this->username = _username;
             this->connection->sendAction(packet::operation::OK, "welcome " + username);
+            std::cout << "[" + this->username + "]" << std::setw(20) << "logged in" << std::endl;
             return 2; // Ok
         case 1:
             this->connection->sendAction(packet::operation::KO, "invalid password");
+            std::cout << "[" + this->username + "]" << std::setw(20) << "invalid password" << std::endl;
             return 1; // only bad pass
         case 0:
             this->connection->sendAction(packet::operation::KO, "invalid username");
-            username = _username;
-            loggedIn = true;
+            std::cout << "[" + this->username + "]" << std::setw(20) << "invalid username " << _username << std::endl;
             return 0; // bad user/pass
     }
     return 0;
@@ -121,6 +124,7 @@ auto Client::startCall(std::string const &body, std::deque<std::shared_ptr<Clien
                 this->username + "\n" + this->connection->ip() + "\n" + port);
         this->connection->sendAction(packet::operation::OK);
         inCallWith = target_name;
+        std::cout << "[" + this->username + "]" << std::setw(20) << "calling " << inCallWith << std::endl;
     }
 }
 
@@ -144,6 +148,9 @@ auto Client::register_(std::string const &body) -> int {
         case 0:
             Database::get().write(_user, _pass);
             this->connection->sendAction(packet::operation::OK);
+            this->username = _user;
+            this->loggedIn = true;
+            std::cout << "[" + this->username + "]" << std::setw(20) << "registered" << std::endl;
             break;
     }
     return 0;
@@ -159,18 +166,22 @@ auto Client::callEnd(std::deque<std::shared_ptr<Client>> &clients) -> void {
     auto incall = std::find(clients.begin(), clients.end(), inCallWith);
     if (incall != clients.end())
         (*incall)->connection->sendAction(packet::operation::CALL_END);
+    std::cout << "[" + this->username + "]" << std::setw(20) << "ending call with " << inCallWith << std::endl;
+    inCallWith = "";
 }
 
 auto Client::listUsers(std::deque<std::shared_ptr<Client>> &clients) -> std::string {
     std::string list;
+    int i = 0;
 
     for (auto const &c : clients) {
         if ((!(c == this->username)) && (!(c == "unknown"))) {
             list += c->username;
             list += "\n";
+            i++;
         }
     }
-    std::cout << this->username << " ---------- " << list << std::endl;
+    std::cout << "[" + this->username + "]" << std::setw(20) << "got a list of " << i << std::endl;
     return (!list.empty() && list[list.size() - 1] == '\n') ? list.substr(0, list.size() - 1) : list;
 }
 
