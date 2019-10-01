@@ -29,6 +29,10 @@ file(GLOB DLLS "${CMAKE_SOURCE_DIR}/lib/dll/*.dll")
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
+set (CMAKE_PREFIX_PATH "C:\\Qt\\5.12.5\\msvc2017_64")
+#set(BIN_MSVC_PATH "C:\\Qt\\5.12.5\\msvc2017\\bin")
+
+
 
 find_package(Qt5Widgets CONFIG REQUIRED)
 
