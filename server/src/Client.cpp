@@ -7,6 +7,7 @@
 #include <shared/packets.hpp>
 #include "Client.hpp"
 #include "shared/headers.hpp"
+#include <algorithm>
 
 Client::Client(std::shared_ptr<network::TcpConnection> &_connection) : connection((_connection)) {
     std::cout << "[" + this->username + "]" << std::setw(20) << "connected" << std::endl;
@@ -35,9 +36,14 @@ auto Client::process(std::deque<std::shared_ptr<Client>> &clients) -> bool try {
 
         case packet::operation::REGISTER:
             this->register_(data.body());
+            break;
 
         case packet::operation::CALL_START:
             this->startCall(data.body(), clients);
+            break;
+
+        case packet::operation::CALL_ACCEPT:
+            this->acceptCall(clients);
             break;
 
         case packet::operation::DISCONNECT:
@@ -60,9 +66,9 @@ auto Client::process(std::deque<std::shared_ptr<Client>> &clients) -> bool try {
 
         default:
             this->connection->sendAction(packet::operation::KO, "invalid operation");
+            break;
     }
     return true;
-
 } catch (ex::NetworkException &) {
     std::cout << "[" + this->username + "]" << std::setw(20) << "disconnected" << std::endl;
     return false;
@@ -122,6 +128,7 @@ auto Client::startCall(std::string const &body, std::deque<std::shared_ptr<Clien
     else {
         (*target)->connection->sendAction(packet::operation::INCOMMING_CALL,
                 this->username + "\n" + this->connection->ip() + "\n" + port);
+        (*target)->inCallWith = this->username;
         this->connection->sendAction(packet::operation::OK);
         inCallWith = target_name;
         std::cout << "[" + this->username + "]" << std::setw(20) << "calling " << inCallWith << std::endl;
@@ -183,6 +190,16 @@ auto Client::listUsers(std::deque<std::shared_ptr<Client>> &clients) -> std::str
     }
     std::cout << "[" + this->username + "]" << std::setw(20) << "got a list of " << i << std::endl;
     return (!list.empty() && list[list.size() - 1] == '\n') ? list.substr(0, list.size() - 1) : list;
+}
+
+auto Client::acceptCall(std::deque<std::shared_ptr<Client>> &clients) -> void {
+    auto target = std::find(clients.begin(), clients.end(), inCallWith);
+
+    if (target != clients.end()) {
+        (*target)->connection->sendAction(packet::operation::CALL_ACCEPT, this->connection->ip());
+        this->connection->sendAction(packet::operation::OK);
+        std::cout << "[" + this->username + "]" << std::setw(20) << "call accepted with " << inCallWith << std::endl;
+    }
 }
 
 auto operator==(std::shared_ptr<Client> const &c, std::string const &s) -> bool {

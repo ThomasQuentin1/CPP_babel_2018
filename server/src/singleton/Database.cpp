@@ -56,5 +56,4 @@ auto Database::read(std::string const &username, std::string const &password) ->
 }
 
 Database::~Database() {
-    throw ex::IOException("Database destroyed", "db dtor");
 }

@@ -18,6 +18,13 @@ LoggedWindow::LoggedWindow(QWidget *parent) :
 
 commEnum_t LoggedWindow::refresh(commEnum_t enumArg, std::string name)
 {
+    if (usr.getWaitingForAnswer()) {
+        if (enumArg == commEnum_t::CALL_ACCEPTED) {
+
+        } else if (enumArg == commEnum_t::CALL_DECLINED) {
+
+        }
+    }
     if (enumArg == commEnum_t::INCOMMING_CALL) {
         QString newName = QString::fromStdString("Incomming call from ") + QString::fromStdString(name);
         int reponse = QMessageBox::question(this, tr("Incomming call"), tr(name.c_str()), QMessageBox::Yes | QMessageBox::No);
@@ -26,9 +33,10 @@ commEnum_t LoggedWindow::refresh(commEnum_t enumArg, std::string name)
         } else {
             returnRefresh = commEnum_t::DECLINE_CALL;
         }
+        enumArg = commEnum_t::NONE;
     }
     if (enumArg == commEnum_t::CALL_ACCEPTED) {
-        QMessageBox::information(this, tr("Current call"), tr(usr.getCalledContact().c_str()), QMessageBox::Abort);
+
     } else if (enumArg == commEnum_t::CALL_DECLINED) {
         usr.setCalledContact("");
     }
@@ -111,6 +119,8 @@ void LoggedWindow::send_data(QString name)
 {
     targetArgument = name.toStdString();
     returnRefresh = commEnum_t::CALL;
+    usr.setWaitingForAnswer(true);
+    QMessageBox::information(this, tr("You're currently trying to call"), tr(usr.getCalledContact().c_str()), QMessageBox::Abort);
     usr.setCalledContact(name.toStdString());
 }
 
