@@ -16,11 +16,11 @@
 #include <client/src/Thread.hpp>
 
 
-class PortAudioRecorder : public PortAudio {
+class PortAudioRecorder : public PortAudio , public IRecorder{
 public:
-	explicit PortAudioRecorder();
+	PortAudioRecorder();
 	auto record() ->void;
-	~PortAudioRecorder();
+	~PortAudioRecorder() = default;
 	auto receiveSound()->std::shared_ptr<SoundPacket>;
 	auto entryPoint() -> void;
 

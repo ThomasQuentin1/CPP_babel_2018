@@ -37,11 +37,6 @@ auto PortAudioRecorder::receiveSound() -> std::shared_ptr<SoundPacket>
 	return data;
 }
 
-PortAudioRecorder::~PortAudioRecorder()
-{
-
-}
-
 auto PortAudioRecorder::entryPoint() -> void
 {
 	while (this->_thread)

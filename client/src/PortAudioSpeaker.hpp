@@ -16,10 +16,11 @@
 #include <client/src/Thread.hpp>
 
 
-class PortAudioSpeaker : public  PortAudio {
+class PortAudioSpeaker : public  PortAudio , public ISpeaker {
 public:
 
 	PortAudioSpeaker();
+	~PortAudioSpeaker() = default;
 	auto play() -> void;
 	auto sendSound(std::shared_ptr<SoundPacket> packet) -> void;
 	auto entryPoint() -> void;
