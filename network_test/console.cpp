@@ -9,7 +9,7 @@
 
 void console() try
 {
-    network::TcpConnection sok("127.0.0.1", 9081);
+    network::TcpConnection sok("127.0.0.1", 4242);
 
     while (std::cin) {
         char op_nbr = 0;
