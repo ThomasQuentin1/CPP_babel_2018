@@ -9,7 +9,8 @@
 #include <memory>
 #include <shared/types.hpp>
 
-static void del(void *that) {
+template <typename T>
+static void del(T *that) {
 	delete[] that;
 }
 
@@ -23,7 +24,7 @@ public:
 
     template<typename T>
     auto recv() -> std::shared_ptr<T> {
-        return std::shared_ptr<T>(reinterpret_cast<T*>(recvData(sizeof(T))), del);
+        return std::shared_ptr<T>(reinterpret_cast<T*>(recvData(sizeof(T))), del<T>);
     }
 
 protected:

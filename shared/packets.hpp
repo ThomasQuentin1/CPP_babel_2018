@@ -34,10 +34,11 @@ namespace packet
         DISCONNECT,     // 4
         CALL_START,     // 5
         CALL_END,       // 6
-        INCOMMING_CALL, // 7
-        GET_CONTACTS,   // 8
-        LOGOUT,         // 9
-        DATA,           // 10
+        CALL_ACCEPT,    // 7
+        INCOMMING_CALL, // 8
+        GET_CONTACTS,   // 9
+        LOGOUT,         // 10
+        DATA,           // 11
     };
 }
 

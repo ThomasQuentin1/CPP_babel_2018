@@ -14,6 +14,7 @@ auto Communication::incommingCall() -> std::string const & {
 auto Communication::acceptCall() -> void {
     this->incomming_call_username = "";
     this->client_connection = std::make_shared<network::UdpConnection>(this->incomming_call_ip, this->incomming_call_port, false);
+    this->server_connection->sendAction(packet::operation::CALL_ACCEPT);
 }
 
 auto Communication::declineCall() -> void {
