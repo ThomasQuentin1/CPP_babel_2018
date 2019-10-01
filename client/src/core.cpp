@@ -3,6 +3,7 @@
 Core::Core(int argc, char *argv[])
 {
     this->gui = std::make_unique<Gui>(argc, argv);
+    std::cerr << gui.get() << std::endl;
 }
 
 void Core::loop()
@@ -30,6 +31,7 @@ void Core::loop()
                 comm.declineCall();
                 break;
             case commEnum_t::TRY_LOGIN:
+                std::cout << "login" << std::endl;
                 check = comm.login(gui->getArgument());
                 if (check == true) {
                     argToSendToRefresh = commEnum_t::CONNECTION_SUCCESS;
@@ -39,6 +41,7 @@ void Core::loop()
                 }
                 break;
             case commEnum_t::TRY_REGISTER:
+                std::cout << "register" << std::endl;
                 check = comm.signUp(gui->getArgument());
                 if (check == true) {
                     argToSendToRefresh = commEnum_t::CONNECTION_SUCCESS;
@@ -53,9 +56,9 @@ void Core::loop()
                 argToSendToRefresh = commEnum_t::NONE;
                 break;
         }
-
-
+/*
         if (this->comm.isCommunicating()) {
+            argToSendToRefresh = commEnum_t::IS_COMMUNICATING;
             if (!this->speaker)
                 this->speaker = std::make_unique<PortAudioSpeaker>();
             if (!this->recorder)
@@ -72,7 +75,7 @@ void Core::loop()
             this->speaker = nullptr;
             this->recorder = nullptr;
         }
-
+*/
         i++;
         if (i >= 1000000 && isLogged) {
             i = 0;

@@ -8,8 +8,8 @@
 #ifndef INC_DFA9769CE2B64015BA6FFFE219292F57
     #define INC_DFA9769CE2B64015BA6FFFE219292F57
 
-#include "../shared/headers.hpp"
-#include "../shared/SoundPacket.hpp"
+#include "shared/headers.hpp"
+#include "shared/SoundPacket.hpp"
 
 
 class IRecorder {
