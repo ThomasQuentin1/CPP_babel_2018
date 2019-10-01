@@ -49,3 +49,13 @@ void User::setListChanged(bool value)
 {
     listChanged = value;
 }
+
+bool User::getWaitingForAnswer() const
+{
+    return waitingForAnswer;
+}
+
+void User::setWaitingForAnswer(bool value)
+{
+    waitingForAnswer = value;
+}

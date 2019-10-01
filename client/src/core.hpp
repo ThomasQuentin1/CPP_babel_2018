@@ -13,7 +13,7 @@ class Core
 public:
     Core(int argc, char *argv[]);
     void loop();
-    std::unique_ptr<IGui> gui;
+    IGui *gui;
 private:
 
     Communication comm;

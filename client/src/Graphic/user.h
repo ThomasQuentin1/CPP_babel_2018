@@ -26,9 +26,13 @@ public:
     bool getListChanged() const;
     void setListChanged(bool value);
 
+    bool getWaitingForAnswer() const;
+    void setWaitingForAnswer(bool value);
+
 private:
     QString m_userID = "";
     bool listChanged = false;
+    bool waitingForAnswer = false;
     std::vector<std::string> onlineContactsList;
     std::string calledContact;
 

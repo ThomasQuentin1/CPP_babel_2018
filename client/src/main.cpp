@@ -3,10 +3,13 @@
 //
 
 #include "shared/headers.hpp"
+#include "shared/network/WindowsInit.hpp"
 #include "core.hpp"
 
 int main(int ac, char *av[]) try
 {
+    network::WindowsInit window;
+
     Core core(ac, av);
 
     core.loop();
