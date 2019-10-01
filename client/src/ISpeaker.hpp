@@ -7,8 +7,8 @@
 
 #ifndef INC_A52A3BF4FC264C66BF117AB3287A9450
     #define INC_A52A3BF4FC264C66BF117AB3287A9450
-#include "../shared/headers.hpp"
-#include "../shared/SoundPacket.hpp"
+#include "shared/headers.hpp"
+#include "shared/SoundPacket.hpp"
 
 class ISpeaker {
 public:

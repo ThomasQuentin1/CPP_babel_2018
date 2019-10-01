@@ -2,7 +2,9 @@
 
 Core::Core(int argc, char *argv[])
 {
-    this->gui = std::make_unique<Gui>(argc, argv);
+ //   this->gui = std::make_unique<Gui>(argc, argv);
+//    std::cerr << gui.get() << std::endl;
+    gui = new Gui(argc, argv);
 }
 
 void Core::loop()
@@ -15,6 +17,12 @@ void Core::loop()
     int i = 0;
 
     while (whilecond == 0) {
+        comm.refresh();
+        if (comm.incommingCall() != "") {
+            names = comm.incommingCall();
+            argToSendToRefresh = commEnum_t::INCOMMING_CALL;
+            std::cout << names << " is calling me" << std::endl;
+        }
         ret = gui->refresh(argToSendToRefresh, names);
         argToSendToRefresh = commEnum_t::NONE;
         names = "";
@@ -30,6 +38,7 @@ void Core::loop()
                 comm.declineCall();
                 break;
             case commEnum_t::TRY_LOGIN:
+                std::cout << "login" << std::endl;
                 check = comm.login(gui->getArgument());
                 if (check == true) {
                     argToSendToRefresh = commEnum_t::CONNECTION_SUCCESS;
@@ -39,6 +48,7 @@ void Core::loop()
                 }
                 break;
             case commEnum_t::TRY_REGISTER:
+                std::cout << "register" << std::endl;
                 check = comm.signUp(gui->getArgument());
                 if (check == true) {
                     argToSendToRefresh = commEnum_t::CONNECTION_SUCCESS;
@@ -54,8 +64,8 @@ void Core::loop()
                 break;
         }
 
-
         if (this->comm.isCommunicating()) {
+            argToSendToRefresh = commEnum_t::IS_COMMUNICATING;
             if (!this->speaker)
                 this->speaker = std::make_unique<PortAudioSpeaker>();
             if (!this->recorder)
@@ -79,6 +89,7 @@ void Core::loop()
             gui->setOnlineContact(stringToVector(comm.getOnlineUsers()));
         }
     }
+    delete (gui);
 }
 
 std::vector<std::string> Core::stringToVector(std::string line)
