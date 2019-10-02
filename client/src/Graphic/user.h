@@ -20,8 +20,8 @@ public:
     std::vector<std::string> getOnlineContactsList() const;
     void setOnlineContactsList(const std::vector<std::string> &value);
 
-    std::string getCalledContact() const;
-    void setCalledContact(const std::string &value);
+    std::string getContactInCommunication() const;
+    void setContactInCommunication(const std::string &value);
 
     bool getListChanged() const;
     void setListChanged(bool value);
@@ -38,7 +38,7 @@ private:
     bool waitingForAnswer = false;
     bool inCommunication = false;
     std::vector<std::string> onlineContactsList;
-    std::string calledContact;
+    std::string contactInCommunication;
 
 };
 

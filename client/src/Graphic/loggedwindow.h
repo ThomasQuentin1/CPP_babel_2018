@@ -36,8 +36,6 @@ private slots:
 private:
     Ui::LoggedWindow *ui;
 
-    std::unique_ptr<QLabel> label;
-
     std::vector<std::string> getMultipleArgInALine(std::string line);
     QScrollArea *scrollArea;
     void closeEvent (QCloseEvent *event);

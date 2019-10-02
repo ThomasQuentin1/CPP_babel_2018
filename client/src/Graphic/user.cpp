@@ -30,14 +30,14 @@ void User::setOnlineContactsList(const std::vector<std::string> &value)
     }
 }
 
-std::string User::getCalledContact() const
+std::string User::getContactInCommunication() const
 {
-    return calledContact;
+    return contactInCommunication;
 }
 
-void User::setCalledContact(const std::string &value)
+void User::setContactInCommunication(const std::string &value)
 {
-    calledContact = value;
+    contactInCommunication = value;
 }
 
 bool User::getListChanged() const

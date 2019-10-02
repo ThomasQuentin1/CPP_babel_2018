@@ -15,29 +15,31 @@ LoggedWindow::LoggedWindow(QWidget *parent) :
     ui(new Ui::LoggedWindow)
 {
     ui->setupUi(this);
-    QFont f( "Arial", 20, QFont::Bold);
-    label = std::make_unique<QLabel>(this);
-    label->setAlignment(Qt::AlignLeft);
-    label->setGeometry(QRectF(10,10,30,80));
-    label->setFont(f);
+
+    ui->labelCenter->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+    ui->labelCenter->setText("");
 }
 
 commEnum_t LoggedWindow::refresh(commEnum_t enumArg, std::string name)
 {
     if (usr.getWaitingForAnswer()) {
-        if (enumArg == commEnum_t::CALL_ACCEPTED) {
+        if (enumArg == commEnum_t::IS_COMMUNICATING && usr.getInCommunication() == false) {
+            ui->labelCenter->setText("In call with " + QString::fromStdString(usr.getContactInCommunication()));
             usr.setInCommunication(true);
             usr.setWaitingForAnswer(false);
         } else if (enumArg == commEnum_t::CALL_DECLINED) {
             usr.setWaitingForAnswer(false);
+            ui->labelCenter->setText("");
             QMessageBox::question(this, tr("Your call has been declined"), tr(name.c_str()), QMessageBox::Ok);
         }
     }
     if (enumArg == commEnum_t::INCOMMING_CALL) {
         QString newName = QString::fromStdString("Incomming call from ") + QString::fromStdString(name);
+        usr.setContactInCommunication(name);
         int reponse = QMessageBox::question(this, tr("Incomming call"), tr(name.c_str()), QMessageBox::Yes | QMessageBox::No);
         if (reponse == QMessageBox::Yes) {
             returnRefresh = commEnum_t::ACCEPT_CALL;
+            ui->labelCenter->setText("In call with " + QString::fromStdString(usr.getContactInCommunication()));
         } else {
             returnRefresh = commEnum_t::DECLINE_CALL;
         }
@@ -46,7 +48,7 @@ commEnum_t LoggedWindow::refresh(commEnum_t enumArg, std::string name)
     if (enumArg == commEnum_t::CALL_ACCEPTED) {
 
     } else if (enumArg == commEnum_t::CALL_DECLINED) {
-        usr.setCalledContact("");
+        usr.setContactInCommunication("");
     }
     if (usr.getListChanged()) {
         updateUI();
@@ -115,12 +117,20 @@ void LoggedWindow::insertAllContacts()
         connect(button,SIGNAL(clicked()),sendSignalMapper,SLOT(map()));
     }
     connect(sendSignalMapper,SIGNAL(mapped(QString)),this ,SLOT(send_data(QString)));
-    QWidget* contentWidget = new QWidget();
-    contentWidget->setLayout(layout);
 
-    QScrollArea* scrollArea = new QScrollArea();
-    scrollArea->setWidget(contentWidget);
-    setCentralWidget(scrollArea);
+    QWidget* contentWidget = new QWidget();
+
+    QWidget* lastWidget = new QWidget();
+    QVBoxLayout* lastLayout = new QVBoxLayout();
+
+    contentWidget->setLayout(layout);
+    lastLayout->addWidget(contentWidget);
+    lastLayout->addWidget(ui->labelCenter);
+
+    lastWidget->setLayout(lastLayout);
+    ui->scrollArea->setWidget(lastWidget);
+
+    setCentralWidget(ui->scrollArea);
 }
 
 void LoggedWindow::send_data(QString name)
@@ -128,8 +138,8 @@ void LoggedWindow::send_data(QString name)
     targetArgument = name.toStdString();
     returnRefresh = commEnum_t::CALL;
     usr.setWaitingForAnswer(true);
-    label->setText("Calling " + name);
-    usr.setCalledContact(name.toStdString());
+    ui->labelCenter->setText("Calling " + name);
+    usr.setContactInCommunication(name.toStdString());
 }
 
 LoggedWindow::~LoggedWindow()

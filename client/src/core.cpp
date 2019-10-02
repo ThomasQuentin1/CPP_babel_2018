@@ -81,6 +81,9 @@ void Core::loop()
 				std::cout << "Sending sound to speaker" << std::endl;
 			}
         } else {
+            if (comm.isCalling() == false && argToSendToRefresh == commEnum_t::NONE) {
+                argToSendToRefresh = commEnum_t::CALL_DECLINED;
+            }
             this->speaker = nullptr;
             this->recorder = nullptr;
         }
