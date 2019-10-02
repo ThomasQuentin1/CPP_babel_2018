@@ -3,10 +3,10 @@
 //
 
 #include <shared/exceptions/NetworkException.hpp>
-#include "TcpConnection.hpp"
+#include "TcpConnectionNative.hpp"
 
 
-network::TcpConnection::TcpConnection(std::string const &ip, short port) : remote_addr({}) {
+network::TcpConnectionNative::TcpConnectionNative(std::string const &ip, short port) : remote_addr({}) {
     this->s = socket(PF_INET, SOCK_STREAM, 0);
     remote_addr.sin_family = AF_INET;
     remote_addr.sin_port = htons(port);
@@ -20,7 +20,7 @@ network::TcpConnection::TcpConnection(std::string const &ip, short port) : remot
     this->_ip = ip;
 }
 
-network::TcpConnection::TcpConnection(sock _s, sockaddr_in &_remote_addr) : remote_addr(_remote_addr) {
+network::TcpConnectionNative::TcpConnectionNative(sock _s, sockaddr_in &_remote_addr) : remote_addr(_remote_addr) {
     this->s = _s;
 
     struct in_addr ipAddr = remote_addr.sin_addr;
@@ -29,7 +29,7 @@ network::TcpConnection::TcpConnection(sock _s, sockaddr_in &_remote_addr) : remo
     this->_ip = std::string(str);
 }
 
-auto network::TcpConnection::sendData(bytes buffer, int size) -> int {
+auto network::TcpConnectionNative::sendData(bytes buffer, int size) -> int {
 	if (size == 0)
 		return 0;
     int ret = ::send(this->s, (char const*)buffer, size, MSG_NOSIGNAL);
@@ -38,7 +38,7 @@ auto network::TcpConnection::sendData(bytes buffer, int size) -> int {
     return ret;
 }
 
-auto network::TcpConnection::recvData(int size) -> bytes {
+auto network::TcpConnectionNative::recvData(int size) -> bytes {
 	if (size == 0)
 		return nullptr;
     if (this->buffer_size < size) {
@@ -57,11 +57,11 @@ auto network::TcpConnection::recvData(int size) -> bytes {
     return retrn;
 }
 
-network::TcpConnection::~TcpConnection() {
+network::TcpConnectionNative::~TcpConnectionNative() {
     closesocket(this->s);
 }
 
-auto network::TcpConnection::recvAction() -> packet::ActionDyn {
+auto network::TcpConnectionNative::recvAction() -> packet::ActionDyn {
     auto raw_action = this->recv<packet::action>();
 
     if (raw_action->body_size) {
@@ -77,7 +77,7 @@ auto network::TcpConnection::recvAction() -> packet::ActionDyn {
 
 }
 
-auto network::TcpConnection::sendAction(packet::operation op, std::string const &body) -> void {
+auto network::TcpConnectionNative::sendAction(packet::operation op, std::string const &body) -> void {
     packet::action ac;
 
     ac.action_code = static_cast<char>(op);
@@ -88,6 +88,6 @@ auto network::TcpConnection::sendAction(packet::operation op, std::string const 
         this->sendData(reinterpret_cast<bytes>(const_cast<char*>(body.c_str())), body.size() + 1);
 }
 
-auto network::TcpConnection::ip() -> std::string const & {
+auto network::TcpConnectionNative::ip() -> std::string const & {
     return this->_ip;
 }

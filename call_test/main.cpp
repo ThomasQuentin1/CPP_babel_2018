@@ -2,7 +2,7 @@
 // Created by tom on 9/30/19.
 //
 
-#include <shared/network/UdpConnection.hpp>
+#include <shared/network/UdpConnectionNative.hpp>
 #include "shared/headers.hpp"
 #include <client/src/PortAudioRecorder.hpp>
 #include <client/src/PortAudioSpeaker.hpp>

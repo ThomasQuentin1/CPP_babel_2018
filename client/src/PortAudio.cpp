@@ -12,7 +12,6 @@ PortAudio::PortAudio() : _thread(this)
 	PaError err;
 	const PaDeviceInfo* inputInfo;
 	const PaDeviceInfo* outputInfo;
-	int numBytes;
 	int numChannels;
 
 	err = Pa_Initialize();
@@ -29,11 +28,11 @@ PortAudio::PortAudio() : _thread(this)
 	inputParameters.channelCount = numChannels;
 	inputParameters.sampleFormat = paFloat32;
 	inputParameters.suggestedLatency = inputInfo->defaultHighInputLatency;
-	inputParameters.hostApiSpecificStreamInfo = NULL;
+	inputParameters.hostApiSpecificStreamInfo = nullptr;
 	outputParameters.channelCount = numChannels;
 	outputParameters.sampleFormat = paFloat32;
 	outputParameters.suggestedLatency = outputInfo->defaultHighOutputLatency;
-	outputParameters.hostApiSpecificStreamInfo = NULL;
+	outputParameters.hostApiSpecificStreamInfo = nullptr;
 	/* -- setup -- */
 	err = Pa_OpenStream(
 		&this->stream,
@@ -42,8 +41,8 @@ PortAudio::PortAudio() : _thread(this)
 		audioConfig::sample_rate,
 		audioConfig::frames_per_buffer,
 		paClipOff,
-		NULL,
-		NULL);
+        nullptr,
+        nullptr);
 	if (err != paNoError)
 		throw ex::SoundException("error");
 	err = Pa_StartStream(stream);

@@ -17,7 +17,7 @@ private:
 
     Communication comm;
     std::vector<std::string> stringToVector(std::string);
-    std::unique_ptr<PortAudio> audio;
+    std::unique_ptr<IAudio> audio;
     bool isLogged = false;
 };
 

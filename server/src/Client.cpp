@@ -9,7 +9,7 @@
 #include "shared/headers.hpp"
 #include <algorithm>
 
-Client::Client(std::shared_ptr<network::TcpConnection> &_connection) : connection((_connection)) {
+Client::Client(std::shared_ptr<network::TcpConnectionNative> &_connection) : connection((_connection)) {
     std::cout << "[" + this->username + "]" << std::setw(20) << "connected" << std::endl;
 }
 

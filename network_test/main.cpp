@@ -3,8 +3,8 @@
 //
 
 #include <shared/packets.hpp>
-#include <shared/network/UdpConnection.hpp>
-#include "shared/network/TcpConnection.hpp"
+#include <shared/network/UdpConnectionNative.hpp>
+#include "shared/network/TcpConnectionNative.hpp"
 #include "shared/network/WindowsInit.hpp"
 
 

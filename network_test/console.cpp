@@ -4,12 +4,12 @@
 
 
 #include <shared/network/ActionDyn.hpp>
-#include <shared/network/TcpConnection.hpp>
+#include <shared/network/TcpConnectionNative.hpp>
 #include <shared/exceptions/NetworkException.hpp>
 
 void console() try
 {
-    network::TcpConnection sok("127.0.0.1", 4242);
+    network::TcpConnectionNative sok("127.0.0.1", 4242);
 
     while (std::cin) {
         char op_nbr = 0;

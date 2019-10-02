@@ -12,7 +12,7 @@ auto Communication::incommingCall() -> std::string const & {
 
 auto Communication::acceptCall() -> void {
     this->incomming_call_username = "";
-    this->client_connection = std::make_shared<network::UdpConnection>(this->incomming_call_ip, this->incomming_call_port, false);
+    this->client_connection = std::make_shared<network::UdpConnectionNative>(this->incomming_call_ip, this->incomming_call_port, false);
     this->server_connection->sendAction(packet::operation::CALL_ACCEPT);
 }
 
@@ -63,7 +63,7 @@ auto Communication::refresh() -> void {
 }
 
 Communication::Communication(std::string const &ip, short port) {
-    this->server_connection = std::make_shared<network::TcpConnection>(ip, port);
+    this->server_connection = std::make_shared<network::TcpConnectionNative>(ip, port);
 }
 
 auto Communication::parseIncommingCall(std::string const &body) -> void {
@@ -90,7 +90,7 @@ auto Communication::refreshServer() -> void {
             break;
         case packet::operation::CALL_ACCEPT:
 			std::cout << "connecting to " << action.body() << ":" << this->outgoing_call_port << std::endl;
-            this->client_connection = std::make_shared<network::UdpConnection>(action.body(), this->outgoing_call_port, true);
+            this->client_connection = std::make_shared<network::UdpConnectionNative>(action.body(), this->outgoing_call_port, true);
 			break;
         case packet::operation::DISCONNECT:
             throw ex::NetworkException("Server told you to disconnect", "communication refresh");

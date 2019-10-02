@@ -3,9 +3,9 @@
 //
 
 #include <shared/exceptions/NetworkException.hpp>
-#include "UdpConnection.hpp"
+#include "UdpConnectionNative.hpp"
 
-network::UdpConnection::UdpConnection(std::string const &ip, short port, bool server) {
+network::UdpConnectionNative::UdpConnectionNative(std::string const &ip, short port, bool server) {
     s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (s <= 0)
         throw ex::NetworkException("Can't open socket", "UDP connection");
@@ -17,7 +17,7 @@ network::UdpConnection::UdpConnection(std::string const &ip, short port, bool se
         bind(port);
 }
 
-auto network::UdpConnection::sendData(bytes buffer, int size) -> int {
+auto network::UdpConnectionNative::sendData(bytes buffer, int size) -> int {
     //timeout.check();
 	if (size == 0)
 		return 0;
@@ -28,7 +28,7 @@ auto network::UdpConnection::sendData(bytes buffer, int size) -> int {
     return ret;
 }
 
-auto network::UdpConnection::recvData(int size) -> bytes {
+auto network::UdpConnectionNative::recvData(int size) -> bytes {
     //timeout.check();
 
 	if (size == 0)
@@ -53,11 +53,11 @@ auto network::UdpConnection::recvData(int size) -> bytes {
     return retrn;
 }
 
-network::UdpConnection::~UdpConnection() {
+network::UdpConnectionNative::~UdpConnectionNative() {
     closesocket(this->s);
 }
 
-auto network::UdpConnection::bind(short port) -> void {
+auto network::UdpConnectionNative::bind(short port) -> void {
     struct sockaddr_in servaddr = {};
 
     servaddr.sin_family = AF_INET;

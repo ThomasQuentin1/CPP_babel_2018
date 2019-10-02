@@ -7,7 +7,7 @@
 
 
 #include <shared/types.hpp>
-#include "shared/network/TcpConnection.hpp"
+#include "shared/network/TcpConnectionNative.hpp"
 #include "IPollable.hpp"
 
 namespace network {
@@ -18,7 +18,7 @@ namespace network {
         TcpServer(TcpServer const &) = delete;
         ~TcpServer();
 
-        auto accept() -> std::shared_ptr<network::TcpConnection>;
+        auto accept() -> std::shared_ptr<network::TcpConnectionNative>;
     };
 
 }
