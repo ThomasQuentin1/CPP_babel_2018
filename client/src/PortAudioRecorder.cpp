@@ -9,9 +9,8 @@
 #include "PortAudioRecorder.hpp"
 #include "audioConfig.h"
 
-PortAudioRecorder::PortAudioRecorder() : _thread(this)
+PortAudioRecorder::PortAudioRecorder() : _thread(this), PortAudio(false)
 {
-
 }
 
 auto PortAudioRecorder::record() -> void

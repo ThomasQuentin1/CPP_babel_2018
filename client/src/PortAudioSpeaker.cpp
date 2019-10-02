@@ -7,7 +7,7 @@
 #include "audioConfig.h"
 
 
-PortAudioSpeaker::PortAudioSpeaker() : _thread(this)
+PortAudioSpeaker::PortAudioSpeaker() : _thread(this), PortAudio(true)
 {
 
 }

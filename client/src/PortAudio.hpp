@@ -11,7 +11,7 @@
 class PortAudio {
 
 public:
-	PortAudio();
+	explicit PortAudio(bool player);
 protected:
 	PaStream* stream = NULL;
 	std::deque<std::shared_ptr<SoundPacket>> stack;
