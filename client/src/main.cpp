@@ -5,7 +5,7 @@
 #include "shared/headers.hpp"
 #include "shared/network/WindowsInit.hpp"
 #include "core.hpp"
-#include <shared\exceptions\NetworkException.hpp>
+#include <shared/exceptions/NetworkException.hpp>
 
 int main(int ac, char *av[]) try
 {

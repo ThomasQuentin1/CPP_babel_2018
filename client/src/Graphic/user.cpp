@@ -59,3 +59,11 @@ void User::setWaitingForAnswer(bool value)
 {
     waitingForAnswer = value;
 }
+
+void User::setInCommunication(bool value) {
+    inCommunication = value;
+}
+
+bool User::getInCommunication() const {
+    return inCommunication;
+}

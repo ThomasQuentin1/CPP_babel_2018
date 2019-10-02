@@ -7,6 +7,7 @@
 #include <QScrollArea>
 #include "enumcommunication.h"
 #include "user.h"
+#include <memory>
 
 namespace Ui {
 class LoggedWindow;
@@ -34,6 +35,8 @@ private slots:
 
 private:
     Ui::LoggedWindow *ui;
+
+    std::unique_ptr<QLabel> label;
 
     std::vector<std::string> getMultipleArgInALine(std::string line);
     QScrollArea *scrollArea;

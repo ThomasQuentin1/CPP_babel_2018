@@ -8,21 +8,29 @@
 #include <QPushButton>
 #include <QSignalMapper>
 #include <QMessageBox>
+#include <QRectF>
 
 LoggedWindow::LoggedWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::LoggedWindow)
 {
     ui->setupUi(this);
+    QFont f( "Arial", 20, QFont::Bold);
+    label = std::make_unique<QLabel>(this);
+    label->setAlignment(Qt::AlignLeft);
+    label->setGeometry(QRectF(10,10,30,80));
+    label->setFont(f);
 }
 
 commEnum_t LoggedWindow::refresh(commEnum_t enumArg, std::string name)
 {
     if (usr.getWaitingForAnswer()) {
         if (enumArg == commEnum_t::CALL_ACCEPTED) {
-
+            usr.setInCommunication(true);
+            usr.setWaitingForAnswer(false);
         } else if (enumArg == commEnum_t::CALL_DECLINED) {
-
+            usr.setWaitingForAnswer(false);
+            QMessageBox::question(this, tr("Your call has been declined"), tr(name.c_str()), QMessageBox::Ok);
         }
     }
     if (enumArg == commEnum_t::INCOMMING_CALL) {
@@ -120,7 +128,7 @@ void LoggedWindow::send_data(QString name)
     targetArgument = name.toStdString();
     returnRefresh = commEnum_t::CALL;
     usr.setWaitingForAnswer(true);
-    QMessageBox::information(this, tr("You're currently trying to call"), tr(usr.getCalledContact().c_str()), QMessageBox::Abort);
+    label->setText("Calling " + name);
     usr.setCalledContact(name.toStdString());
 }
 

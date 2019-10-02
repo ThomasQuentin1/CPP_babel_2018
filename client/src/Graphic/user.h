@@ -29,10 +29,14 @@ public:
     bool getWaitingForAnswer() const;
     void setWaitingForAnswer(bool value);
 
+    bool getInCommunication() const;
+    void setInCommunication(bool value);
+
 private:
     QString m_userID = "";
     bool listChanged = false;
     bool waitingForAnswer = false;
+    bool inCommunication = false;
     std::vector<std::string> onlineContactsList;
     std::string calledContact;
 
