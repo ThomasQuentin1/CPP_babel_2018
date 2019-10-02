@@ -5,6 +5,7 @@
 #include "shared/headers.hpp"
 #include "shared/network/WindowsInit.hpp"
 #include "core.hpp"
+#include <shared\exceptions\NetworkException.hpp>
 
 int main(int ac, char *av[]) try
 {
@@ -13,8 +14,11 @@ int main(int ac, char *av[]) try
     Core core(ac, av);
 
     core.loop();
-} catch (std::exception const &ex)
-{
+}
+catch (ex::NetworkException & ex) {
+	std::cerr << "Unable to connect to the server" << std::endl;
+	return 84;
+} catch (std::exception & ex) {
     std::cerr << "Fatal error : " << ex.what() << std::endl;
     return 84;
 } catch (int ex) {

@@ -91,8 +91,10 @@ auto Communication::refreshServer() -> void {
             break;
         case packet::operation::CALL_ACCEPT:
             this->client_connection = std::make_shared<network::UdpConnection>(action.body(), this->outgoing_call_port, false);
+			break;
         case packet::operation::DISCONNECT:
             throw ex::NetworkException("Server told you to disconnect", "communication refresh");
+			break;
         default:
             std::cerr << "Unhandled operation recived" << std::endl;
     }
