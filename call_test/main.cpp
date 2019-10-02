@@ -19,7 +19,7 @@ int main(int ac, char *av[]) try {
     //}
 
 	network::WindowsInit windows;
-	network::UdpConnection connection("10.14.57.18", 4242, true);
+	network::UdpConnection connection("10.14.57.185", 4242, true);
     //network::UdpConnection connection(av[1], std::stoi(av[2]), !strcmp(av[3], "true"));
     //Opus encoder;
     PortAudioRecorder recorder;

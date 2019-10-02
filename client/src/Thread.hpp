@@ -22,16 +22,20 @@ public:
 private:
     auto join() -> void;
     bool loop = true;
-    bool isThreadRunning = false;
-    std::shared_ptr<std::thread> thread;
+    int isThreadRunning = 0;
+    std::shared_ptr<std::thread> inThread;
+	std::shared_ptr<std::thread> outThread;
+
 	std::mutex _lock;
 };
 
 template<typename T>
 Thread<T>::Thread(T *that) {
-    this->thread = std::make_shared<std::thread>([that]() -> void {that->entryPoint();});
-	if (!isThreadRunning)
-		this->isThreadRunning = true;
+    this->inThread = std::make_shared<std::thread>([that]() -> void {that->readEntryPoint();});
+	this->outThread = std::make_shared<std::thread>([that]() -> void {that->writeEntryPoint(); });
+
+	if (isThreadRunning != 2)
+		this->isThreadRunning++;
 	else
 		this->join();
 }
@@ -56,7 +60,8 @@ inline auto Thread<T>::lock() -> std::mutex &
 template<typename T>
 inline auto Thread<T>::join() -> void
 {
-	thread->join();
+	inThread->join();
+	outThread->join();
 }
 
 
