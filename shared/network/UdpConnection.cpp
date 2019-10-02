@@ -42,8 +42,8 @@ auto network::UdpConnection::recvData(int size) -> bytes {
     }
     int ret = recvfrom(this->s, (char*)this->recv_buffer, size, MSG_NOSIGNAL, reinterpret_cast<sockaddr*>(&this->addr),
                        &addrsize);
-    if (ret < 0)
-        throw ex::NetworkException("client disconnected", "recv data");
+    //if (ret < 0)
+    //    throw ex::NetworkException("client disconnected", "recv data");
     if (ret != size)
         return nullptr;
     auto retrn = this->recv_buffer;

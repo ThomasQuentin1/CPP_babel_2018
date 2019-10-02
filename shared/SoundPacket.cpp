@@ -10,7 +10,6 @@ SoundPacket::SoundPacket(short _size_) : alloc_size(_size_), data_size(0) {
 }
 
 SoundPacket::~SoundPacket() {
-	std::cout << "Deleting " << this << std::endl;
 	delete[] data;
 }
 

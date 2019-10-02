@@ -90,13 +90,14 @@ auto Communication::refreshServer() -> void {
             this->_isCalling = false;
             break;
         case packet::operation::CALL_ACCEPT:
-            this->client_connection = std::make_shared<network::UdpConnection>(action.body(), this->outgoing_call_port, false);
+			std::cout << "connecting to " << action.body() << ":" << this->outgoing_call_port << std::endl;
+            this->client_connection = std::make_shared<network::UdpConnection>(action.body(), this->outgoing_call_port, true);
 			break;
         case packet::operation::DISCONNECT:
             throw ex::NetworkException("Server told you to disconnect", "communication refresh");
 			break;
         default:
-            std::cerr << "Unhandled operation recived" << std::endl;
+            std::cerr << "Unhandled operation recived " << action.code() << std::endl;
     }
 }
 
@@ -105,7 +106,8 @@ auto Communication::refreshClient() -> void {
         if (this->recv_stack.size() > 100)
             this->recv_stack.pop_front();
         auto data = this->client_connection->recv<packet::data>();
-        if (data->magic == 0XDA) {
+        if (data && data->magic == 0XDA) {
+			std::cout << "Reciving audio data" << std::endl;
             auto packet = std::make_shared<SoundPacket>(audioConfig::frames_per_buffer * sizeof(double));
             packet->copyFrom(data->body, data->size);
             this->recv_stack.push_back((packet));
@@ -116,6 +118,8 @@ auto Communication::refreshClient() -> void {
         std::shared_ptr<SoundPacket> sound_packet = (this->send_stack.front());
         send_stack.pop_front();
         this->client_connection->sendData(sound_packet->ptr(), sound_packet->dataSize());
+		std::cout << "Sending audio data" << std::endl;
+
     }
 }
 

@@ -76,8 +76,10 @@ void Core::loop()
                 this->comm.sendSound(inputsound);
 
             auto outputsound = this->comm.reciveSound();
-            if (outputsound)
-                this->speaker->sendSound(outputsound);
+			if (outputsound) {
+				this->speaker->sendSound(outputsound);
+				std::cout << "Sending sound to speaker" << std::endl;
+			}
         } else {
             this->speaker = nullptr;
             this->recorder = nullptr;
