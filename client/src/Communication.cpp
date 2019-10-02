@@ -108,17 +108,20 @@ auto Communication::refreshClient() -> void {
         auto data = this->client_connection->recv<packet::data>();
         if (data && data->magic == 0XDA) {
 			std::cout << "Reciving audio data" << std::endl;
-            auto packet = std::make_shared<SoundPacket>(audioConfig::frames_per_buffer * sizeof(double));
+            auto packet = std::make_shared<SoundPacket>((*data)->size());
             packet->copyFrom(data->body, data->size);
             this->recv_stack.push_back((packet));
         }
     }
 
     if (!this->send_stack.empty()) {
-        std::shared_ptr<SoundPacket> sound_packet = (this->send_stack.front());
-        send_stack.pop_front();
-        this->client_connection->sendData(sound_packet->ptr(), sound_packet->dataSize());
-		std::cout << "Sending audio data" << std::endl;
+		std::shared_ptr<SoundPacket> sound_packet = (send_stack.front());
+		send_stack.pop_front();
+
+		packet::data sound_data;
+		sound_packet->copyTo(sound_data.body, sound_packet->dataSize());
+		sound_data.size = sound_packet->dataSize();
+		this->client_connection->sendData((bytes)&sound_data, sizeof(packet::data));
 
     }
 }
