@@ -8,6 +8,8 @@
 
 #include <memory>
 #include <thread>
+#include <mutex>
+#include "shared/headers.hpp"
 
 template <typename T>
 class Thread {
@@ -15,7 +17,7 @@ public:
     explicit Thread(T *that);
     ~Thread();
     explicit operator bool();
-	auto lock()->std::mutex&;
+    std::mutex & lock();
 
 private:
     auto join() -> void;

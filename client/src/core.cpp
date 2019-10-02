@@ -66,23 +66,20 @@ void Core::loop()
 
         if (this->comm.isCommunicating()) {
             argToSendToRefresh = commEnum_t::IS_COMMUNICATING;
-            if (!this->speaker)
-                this->speaker = std::make_unique<PortAudioSpeaker>();
-            if (!this->recorder)
-                this->recorder = std::make_unique<PortAudioRecorder>();
+            if (!this->audio)
+                this->audio = std::make_unique<PortAudio>();
 
-            auto inputsound = this->recorder->receiveSound();
+            auto inputsound = this->audio->receiveSound();
             if (inputsound)
                 this->comm.sendSound(inputsound);
 
             auto outputsound = this->comm.reciveSound();
 			if (outputsound) {
-				this->speaker->sendSound(outputsound);
+				this->audio->sendSound(outputsound);
 				std::cout << "Sending sound to speaker" << std::endl;
 			}
         } else {
-            this->speaker = nullptr;
-            this->recorder = nullptr;
+            this->audio = nullptr;
         }
 
         i++;
