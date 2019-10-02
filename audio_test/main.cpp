@@ -355,15 +355,9 @@ int maina(void) {
 }
 
 int main(int ac, char *av[]) {
+
     PortAudioRecorder recorder;
     PortAudioSpeaker speaker;
-
-    while (true) {
-		auto records = recorder.sendSound();
-        for (auto const &data : records)
-        speaker.addData(records);
-    }
-
     return 0;
 }
 
@@ -507,3 +501,4 @@ error2:
     fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
     return -1;
 }
+
