@@ -17,8 +17,7 @@ public:
     auto sendSound(std::shared_ptr<SoundPacket> packet) -> void;
     auto play() -> void;
     auto record() ->void;
-    auto readEntryPoint() -> void;
-	auto writeEntryPoint() -> void;
+    auto entryPoint() -> void;
 
 protected:
 	PaStream* stream = NULL;

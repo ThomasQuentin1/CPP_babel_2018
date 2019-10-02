@@ -94,14 +94,9 @@ auto PortAudio::record() -> void
     _thread.lock().unlock();
 }
 
-auto PortAudio::readEntryPoint() -> void
-{
-	while (this->_thread)
-		this->record();
-}
-
-auto PortAudio::writeEntryPoint() -> void
-{
-	while (this->_thread)
-		this->play();
+auto PortAudio::entryPoint() -> void {
+    while (this->_thread) {
+        this->record();
+        this->play();
+    }
 }
