@@ -7,13 +7,14 @@
 
 #include "shared/network/TcpConnection.hpp"
 #include "shared/network/UdpConnection.hpp"
-#include <shared/SoundPacket.hpp>
 #include "shared/headers.hpp"
+#include "shared/SoundPacket.hpp"
+#include "shared/packets.hpp"
 
 
 class Communication {
 public:
-    explicit Communication(std::string const &ip = "127.0.0.1", short port = 4242);
+    explicit Communication(std::string const &ip = "10.14.58.90", short port = 4243);
 
     auto refresh() -> void;
 

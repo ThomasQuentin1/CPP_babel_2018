@@ -5,7 +5,6 @@
 #include <shared/exceptions/NetworkException.hpp>
 #include "shared/exceptions/UserException.hpp"
 #include "Communication.hpp"
-#include "audioConfig.h"
 
 auto Communication::incommingCall() -> std::string const & {
     return this->incomming_call_username;
@@ -105,10 +104,10 @@ auto Communication::refreshClient() -> void {
     if (this->client_connection->isReady()) {
         if (this->recv_stack.size() > 100)
             this->recv_stack.pop_front();
-        auto data = this->client_connection->recv<packet::data>();
+        std::shared_ptr<packet::data> data = this->client_connection->recv<packet::data>();
         if (data && data->magic == 0XDA) {
 			std::cout << "Reciving audio data" << std::endl;
-            auto packet = std::make_shared<SoundPacket>((*data)->size());
+            std::shared_ptr<SoundPacket> packet = std::make_shared<SoundPacket>(data->size);
             packet->copyFrom(data->body, data->size);
             this->recv_stack.push_back((packet));
         }

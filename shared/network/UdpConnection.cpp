@@ -23,8 +23,8 @@ auto network::UdpConnection::sendData(bytes buffer, int size) -> int {
 		return 0;
 
     int ret = sendto(this->s, (char const *)buffer, size, MSG_NOSIGNAL, reinterpret_cast<const sockaddr*>(&this->addr), sizeof(this->addr));
-    if (ret <= 0)
-        throw ex::NetworkException("client disconnected", "send data");
+    //if (ret <= 0)
+    //    throw ex::NetworkException("client disconnected", "send data");
     return ret;
 }
 
