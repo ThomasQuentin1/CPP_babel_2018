@@ -43,6 +43,7 @@ commEnum_t LoggedWindow::refresh(commEnum_t enumArg, std::string name)
         int reponse = QMessageBox::question(this, tr("Incomming call"), tr(name.c_str()), QMessageBox::Yes | QMessageBox::No);
         if (reponse == QMessageBox::Yes) {
             returnRefresh = commEnum_t::ACCEPT_CALL;
+            usr.setInCommunication(true);
             ui->labelCenter->setText("In call with " + QString::fromStdString(usr.getContactInCommunication()));
         } else {
             returnRefresh = commEnum_t::DECLINE_CALL;
@@ -79,21 +80,6 @@ void LoggedWindow::setOnlineContact(std::vector<std::string> contactsList)
 void LoggedWindow::updateUI()
 {
     insertAllContacts();
-}
-
-std::vector<std::string> LoggedWindow::getMultipleArgInALine(std::string line)
-{
-    std::vector<std::string> list;
-
-    std::size_t current, previous = 0;
-    current = line.find("\n");
-    while (current != std::string::npos) {
-        list.push_back(line.substr(previous, current - previous));
-        previous = current + 1;
-        current = line.find("\n", previous);
-    }
-    list.push_back(line.substr(previous, current - previous));
-    return(list);
 }
 
 void LoggedWindow::closeEvent(QCloseEvent *event)
@@ -152,6 +138,12 @@ void LoggedWindow::send_data(QString name)
     usr.setWaitingForAnswer(true);
     ui->labelCenter->setText("Calling " + name);
     usr.setContactInCommunication(name.toStdString());
+}
+
+void LoggedWindow::on_endCallButton_clicked()
+{
+    usr.setInCommunication(false);
+    returnRefresh = commEnum_t::END_CALL;
 }
 
 LoggedWindow::~LoggedWindow()

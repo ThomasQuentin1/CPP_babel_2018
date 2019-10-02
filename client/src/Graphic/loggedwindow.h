@@ -31,14 +31,13 @@ public:
 
     User usr;
 private slots:
+    void on_endCallButton_clicked();
     void send_data(QString);
 
 private:
     Ui::LoggedWindow *ui;
     bool isEndCallButtonShowed = false;
-
-    std::vector<std::string> getMultipleArgInALine(std::string line);
-    QScrollArea *scrollArea;
+    
     void closeEvent (QCloseEvent *event);
     void insertAllContacts();
 

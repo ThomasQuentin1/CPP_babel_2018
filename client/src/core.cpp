@@ -37,6 +37,9 @@ void Core::loop()
             case commEnum_t::DECLINE_CALL:
                 comm.declineCall();
                 break;
+            case commEnum_t::END_CALL:
+                comm.endCall();
+                break;
             case commEnum_t::TRY_LOGIN:
                 std::cout << "login" << std::endl;
                 check = comm.login(gui->getArgument());
@@ -58,6 +61,7 @@ void Core::loop()
                 break;
             case commEnum_t::LOGOUT:
                 isLogged = false;
+                comm.logout();
                 break;
             default:
                 argToSendToRefresh = commEnum_t::NONE;
@@ -84,11 +88,12 @@ void Core::loop()
             }
             this->audio = nullptr;
         }
-
-        i++;
-        if (i >= 1000000 && isLogged) {
-            i = 0;
-            gui->setOnlineContact(stringToVector(comm.getOnlineUsers()));
+        if (isLogged) {
+            i++;
+            if (i >= 50000) {
+                i = 0;
+                gui->setOnlineContact(stringToVector(comm.getOnlineUsers()));
+            }
         }
     }
     delete (gui);
