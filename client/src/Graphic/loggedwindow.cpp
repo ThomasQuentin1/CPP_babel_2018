@@ -15,9 +15,10 @@ LoggedWindow::LoggedWindow(QWidget *parent) :
     ui(new Ui::LoggedWindow)
 {
     ui->setupUi(this);
-
+    setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
     ui->labelCenter->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
     ui->labelCenter->setText("");
+    ui->endCallButton->hide();
 }
 
 commEnum_t LoggedWindow::refresh(commEnum_t enumArg, std::string name)
@@ -32,6 +33,9 @@ commEnum_t LoggedWindow::refresh(commEnum_t enumArg, std::string name)
             ui->labelCenter->setText("");
             QMessageBox::question(this, tr("Your call has been declined"), tr(name.c_str()), QMessageBox::Ok);
         }
+    }
+    if (enumArg != commEnum_t::IS_COMMUNICATING && usr.getInCommunication()) {
+        usr.setInCommunication(false);
     }
     if (enumArg == commEnum_t::INCOMMING_CALL) {
         QString newName = QString::fromStdString("Incomming call from ") + QString::fromStdString(name);
@@ -53,6 +57,13 @@ commEnum_t LoggedWindow::refresh(commEnum_t enumArg, std::string name)
     if (usr.getListChanged()) {
         updateUI();
         usr.setListChanged(false);
+    }
+    if (usr.getInCommunication() && isEndCallButtonShowed == false) {
+        isEndCallButtonShowed = true;
+        ui->endCallButton->setVisible(true);
+    } else if (usr.getInCommunication() == false && isEndCallButtonShowed) {
+        isEndCallButtonShowed = false;
+        ui->endCallButton->setVisible(false);
     }
     return (commEnum_t::NONE);
 }
@@ -126,6 +137,7 @@ void LoggedWindow::insertAllContacts()
     contentWidget->setLayout(layout);
     lastLayout->addWidget(contentWidget);
     lastLayout->addWidget(ui->labelCenter);
+    lastLayout->addWidget(ui->endCallButton);
 
     lastWidget->setLayout(lastLayout);
     ui->scrollArea->setWidget(lastWidget);

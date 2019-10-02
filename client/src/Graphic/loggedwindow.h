@@ -35,6 +35,7 @@ private slots:
 
 private:
     Ui::LoggedWindow *ui;
+    bool isEndCallButtonShowed = false;
 
     std::vector<std::string> getMultipleArgInALine(std::string line);
     QScrollArea *scrollArea;

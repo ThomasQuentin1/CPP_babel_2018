@@ -36,6 +36,7 @@ public:
     //connection
     auto login(std::string const &loginAndPassword) -> bool;
     auto signUp(std::string const &loginAndPassword) -> bool;
+    auto logout() -> void;
 
     //users
     auto getOnlineUsers() -> std::string;

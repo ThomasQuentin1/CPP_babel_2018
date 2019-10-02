@@ -158,3 +158,9 @@ auto Communication::endCall() -> void {
     this->server_connection->sendAction(packet::operation::CALL_END);
     this->client_connection = nullptr;
 }
+
+auto Communication::logout() -> void
+{
+    this->server_connection->sendAction(packet::operation::LOGOUT);
+    this->server_connection->recvAction();
+}
