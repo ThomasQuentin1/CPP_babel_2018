@@ -3,9 +3,8 @@
 
 #include "Graphic/igui.h"
 #include "Graphic/gui.h"
-#include "PortAudioSpeaker.hpp"
-#include "PortAudioRecorder.hpp"
 #include "Communication.hpp"
+#include "PortAudio.hpp"
 #include <vector>
 
 class Core
@@ -18,8 +17,7 @@ private:
 
     Communication comm;
     std::vector<std::string> stringToVector(std::string);
-    std::unique_ptr<PortAudioSpeaker> speaker;
-    std::unique_ptr<PortAudioRecorder> recorder;
+    std::unique_ptr<PortAudio> audio;
     bool isLogged = false;
 };
 
