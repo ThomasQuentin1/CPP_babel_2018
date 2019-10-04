@@ -2,22 +2,23 @@
 // Created by tom on 9/18/19.
 //
 
-#ifndef BABEL_UDPCONNECTION_HPP
-#define BABEL_UDPCONNECTION_HPP
+#ifndef BABEL_UDPCONNECTIONNATIVE_HPP
+#define BABEL_UDPCONNECTIONNATIVE_HPP
 
 
 #include <shared/types.hpp>
 #include "IPollable.hpp"
 #include "Timeout.hpp"
 #include "IConnection.hpp"
+#include "IUdpConnection.hpp"
 
 namespace network {
 
-    class UdpConnection : public IConnection, public IPollable {
+    class UdpConnectionNative : public IUdpConnection {
     public:
-        UdpConnection(std::string const &ip, short port, bool server);
-        UdpConnection(const UdpConnection &) = delete;
-        ~UdpConnection();
+        UdpConnectionNative(std::string const &ip, short port, bool server);
+        UdpConnectionNative(const UdpConnectionNative &) = delete;
+        ~UdpConnectionNative();
 
         auto sendData(bytes buffer, int size) -> int override ;
         auto recvData(int size) -> bytes override ;
@@ -31,4 +32,4 @@ namespace network {
 
 }
 
-#endif //BABEL_UDPCONNECTION_HPP
+#endif //BABEL_UDPCONNECTIONNATIVE_HPP

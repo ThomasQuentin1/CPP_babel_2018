@@ -2,8 +2,8 @@
 // Created by tom on 9/18/19.
 //
 
-#ifndef BABEL_TCPCONNECTION_HPP
-#define BABEL_TCPCONNECTION_HPP
+#ifndef BABEL_TCPCONNECTIONNATIVE_HPP
+#define BABEL_TCPCONNECTIONNATIVE_HPP
 
 #include <shared/types.hpp>
 #include "IPollable.hpp"
@@ -11,18 +11,19 @@
 #include "IConnection.hpp"
 #include "ActionDyn.hpp"
 #include "shared/headers.hpp"
+#include "ITcpConnection.hpp"
 
 
 namespace network {
 
-    class TcpConnection : public IPollable, public IConnection {
+    class TcpConnectionNative : public ITcpConnection {
     public:
-        TcpConnection(std::string const &ip, short port);
-        explicit TcpConnection(sock s, sockaddr_in &_addr);
-        TcpConnection(const TcpConnection &) = delete;
-        TcpConnection(TcpConnection &&) = default;
+        TcpConnectionNative(std::string const &ip, short port);
+        explicit TcpConnectionNative(sock s, sockaddr_in &_addr);
+        TcpConnectionNative(const TcpConnectionNative &) = delete;
+        TcpConnectionNative(TcpConnectionNative &&) = default;
 
-        ~TcpConnection();
+        ~TcpConnectionNative();
 
         auto ip() -> std::string const &;
         auto recvAction() -> packet::ActionDyn;
@@ -39,4 +40,4 @@ namespace network {
 
 }
 
-#endif //BABEL_TCPCONNECTION_HPP
+#endif //BABEL_TCPCONNECTIONNATIVE_HPP

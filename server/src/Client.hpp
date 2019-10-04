@@ -6,13 +6,13 @@
 #define BABEL_CLIENT_HPP
 
 
-#include <shared/network/TcpConnection.hpp>
+#include <shared/network/TcpConnectionNative.hpp>
 #include <shared/network/UdpProxy.hpp>
 #include <deque>
 
 class Client {
 public:
-    explicit Client(std::shared_ptr<network::TcpConnection> &_connection);
+    explicit Client(std::shared_ptr<network::TcpConnectionNative> &_connection);
 
     Client(Client const &) = delete; // Copy
     Client(Client &&) = default; // move
@@ -34,7 +34,7 @@ private:
 
     // Internal variables
     bool loggedIn = false;
-    std::shared_ptr<network::TcpConnection> connection;
+    std::shared_ptr<network::ITcpConnection> connection;
     std::shared_ptr<network::UdpProxy> proxy = nullptr;
     std::string inCallWith;
 

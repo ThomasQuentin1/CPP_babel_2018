@@ -7,7 +7,7 @@
 
 
 #include <deque>
-#include <shared/network/TcpConnection.hpp>
+#include <shared/network/TcpConnectionNative.hpp>
 #include <shared/network/TcpServer.hpp>
 #include "Client.hpp"
 

@@ -5,8 +5,8 @@
 #ifndef BABEL_COMMUNICATION_HPP
 #define BABEL_COMMUNICATION_HPP
 
-#include "shared/network/TcpConnection.hpp"
-#include "shared/network/UdpConnection.hpp"
+#include "shared/network/TcpConnectionNative.hpp"
+#include "shared/network/UdpConnectionNative.hpp"
 #include "shared/headers.hpp"
 #include "shared/SoundPacket.hpp"
 #include "shared/packets.hpp"
@@ -14,7 +14,7 @@
 
 class Communication {
 public:
-    explicit Communication(std::string const &ip = "10.14.58.224", short port = 4242);
+    explicit Communication(std::string const &ip = "10.14.58.90", short port = 4243);
 
     auto refresh() -> void;
 
@@ -36,6 +36,7 @@ public:
     //connection
     auto login(std::string const &loginAndPassword) -> bool;
     auto signUp(std::string const &loginAndPassword) -> bool;
+    auto logout() -> void;
 
     //users
     auto getOnlineUsers() -> std::string;
@@ -52,8 +53,8 @@ private:
     std::string outgoing_call_ip;
     short outgoing_call_port = 0;
 
-    std::shared_ptr<network::TcpConnection> server_connection;
-    std::shared_ptr<network::UdpConnection> client_connection;
+    std::shared_ptr<network::ITcpConnection> server_connection;
+    std::shared_ptr<network::IUdpConnection> client_connection;
 
     std::deque<std::shared_ptr<SoundPacket>> send_stack;
     std::deque<std::shared_ptr<SoundPacket>> recv_stack;

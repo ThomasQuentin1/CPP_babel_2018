@@ -7,6 +7,7 @@
 #include <QScrollArea>
 #include "enumcommunication.h"
 #include "user.h"
+#include <memory>
 
 namespace Ui {
 class LoggedWindow;
@@ -30,13 +31,13 @@ public:
 
     User usr;
 private slots:
+    void on_endCallButton_clicked();
     void send_data(QString);
 
 private:
     Ui::LoggedWindow *ui;
-
-    std::vector<std::string> getMultipleArgInALine(std::string line);
-    QScrollArea *scrollArea;
+    bool isEndCallButtonShowed = false;
+    
     void closeEvent (QCloseEvent *event);
     void insertAllContacts();
 

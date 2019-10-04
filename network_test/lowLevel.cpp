@@ -3,8 +3,8 @@
 //
 
 #include <shared/types.hpp>
-#include <shared/network/TcpConnection.hpp>
-#include <shared/network/UdpConnection.hpp>
+#include <shared/network/TcpConnectionNative.hpp>
+#include <shared/network/UdpConnectionNative.hpp>
 #include "shared/headers.hpp"
 #include <string.h>
 
@@ -14,7 +14,7 @@ struct testPacket {
 
 void test_tcp_send()
 {
-    network::TcpConnection sok("127.0.0.1", 8190);
+    network::TcpConnectionNative sok("127.0.0.1", 8190);
 
     testPacket to_send;
     testPacket to_recv;
@@ -26,7 +26,7 @@ void test_tcp_send()
 
 void test_udp_send()
 {
-    network::UdpConnection sok("127.0.0.1", 8190, false);
+    network::UdpConnectionNative sok("127.0.0.1", 8190, false);
 
     testPacket to_send;
 
@@ -39,7 +39,7 @@ void test_udp_send()
 
 void test_udp_recv()
 {
-    network::UdpConnection sok("127.0.0.1", 8190, true);
+    network::UdpConnectionNative sok("127.0.0.1", 8190, true);
 
     auto to_recv = sok.recv<testPacket>();
     std::cout << to_recv->data << std::endl;
