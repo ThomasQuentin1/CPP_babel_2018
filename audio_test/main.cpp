@@ -12,9 +12,12 @@ int main()
     PortAudio audio;
 
     while (true) {
+        std::cout << "loop" << std::endl;
         auto packet = audio.receiveSound();
-        if (packet)
+        if (packet) {
+            std::cout << "data" << std::endl;
             audio.sendSound(packet);
+        }
     }
     return 0;
 }
