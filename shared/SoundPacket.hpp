@@ -10,28 +10,28 @@
 
 class SoundPacket {
 public:
-    explicit SoundPacket(short _size);
+    explicit SoundPacket(int _size);
     ~SoundPacket();
     SoundPacket(SoundPacket const &) = delete;
     SoundPacket(SoundPacket &&) = default;
 
-    auto ptr() -> bytes; // Handle with care
+    auto ptr() -> const bytes; // Handle with care
 
     template <typename T>
-    auto ptr() -> T { // Handle with care
+    auto ptr() -> const T { // Handle with care
         return reinterpret_cast<T>(this->data);
     }
 
-    auto copyFrom(bytes, short size) -> void;
-    auto copyTo(bytes, short size) -> void;
-    auto setDataSize(short size) -> void;
-    auto dataSize() -> short;
-    auto allocSize() -> short;
+    auto copyFrom(bytes, int size) -> void;
+    auto copyTo(bytes, int size) -> void;
+    auto setDataSize(int size) -> void;
+    auto dataSize() -> int;
+    auto allocSize() -> int;
 
 private:
     bytes data;
-    short data_size;
-    short alloc_size;
+    int data_size;
+    int alloc_size;
 };
 
 #endif //BABEL_SOUNDPACKET_HPP

@@ -13,27 +13,27 @@ SoundPacket::~SoundPacket() {
 	delete[] data;
 }
 
-auto SoundPacket::ptr() -> bytes {
+auto SoundPacket::ptr() -> const bytes {
 	return this->data;
 }
 
-auto SoundPacket::copyFrom(bytes from, short size) -> void {
+auto SoundPacket::copyFrom(bytes from, int size) -> void {
     memcpy(this->data, from, size);
 }
 
-auto SoundPacket::copyTo(bytes to, short size) -> void {
+auto SoundPacket::copyTo(bytes to, int size) -> void {
     memcpy(to, this->data, size);
     this->data_size = size;
 }
 
-auto SoundPacket::setDataSize(short size) -> void {
+auto SoundPacket::setDataSize(int size) -> void {
     this->data_size = size;
 }
 
-auto SoundPacket::dataSize() -> short {
+auto SoundPacket::dataSize() -> int {
     return this->data_size;
 }
 
-auto SoundPacket::allocSize() -> short {
+auto SoundPacket::allocSize() -> int {
     return this->alloc_size;
 }
