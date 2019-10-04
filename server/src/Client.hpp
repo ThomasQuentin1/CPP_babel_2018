@@ -12,7 +12,7 @@
 
 class Client {
 public:
-    explicit Client(std::shared_ptr<network::TcpConnectionNative> &_connection);
+    explicit Client(std::shared_ptr<network::ITcpConnection> &_connection);
 
     Client(Client const &) = delete; // Copy
     Client(Client &&) = default; // move

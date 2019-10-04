@@ -7,8 +7,8 @@
 
 auto BabelServer::refresh() -> int {
     try {
-        if (server.isReady()) {
-            auto connection = server.accept();
+        if (server->isReady()) {
+            auto connection = server->accept();
             clients.emplace_back(std::make_shared<Client>(connection));
         }
     } catch (ex::NetworkException &ex) {
@@ -28,5 +28,6 @@ auto BabelServer::refresh() -> int {
     return 0;
 }
 
-BabelServer::BabelServer(short port) : server(port) {
+BabelServer::BabelServer(short port) {
+    this->server = std::make_unique<network::TcpServerNative>(port);
 }

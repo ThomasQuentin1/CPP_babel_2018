@@ -3,9 +3,9 @@
 //
 
 #include <shared/exceptions/NetworkException.hpp>
-#include "TcpServer.hpp"
+#include "TcpServerNative.hpp"
 
-network::TcpServer::TcpServer(short port) {
+network::TcpServerNative::TcpServerNative(short port) {
     this->s = socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in server = {0};
 
@@ -24,7 +24,7 @@ network::TcpServer::TcpServer(short port) {
     }
 }
 
-auto network::TcpServer::accept() -> std::shared_ptr<network::TcpConnectionNative> {
+auto network::TcpServerNative::accept() -> std::shared_ptr<network::ITcpConnection> {
     struct sockaddr_in server = {0};
     socklen_t size = sizeof(server);
 
@@ -34,6 +34,6 @@ auto network::TcpServer::accept() -> std::shared_ptr<network::TcpConnectionNativ
     return std::make_shared<TcpConnectionNative>(clientSock, server);
 }
 
-network::TcpServer::~TcpServer() {
+network::TcpServerNative::~TcpServerNative() {
     closesocket(this->s);
 }
