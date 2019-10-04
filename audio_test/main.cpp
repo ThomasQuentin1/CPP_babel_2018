@@ -356,8 +356,7 @@ int maina(void) {
 
 int main(int ac, char *av[]) {
 
-    PortAudioRecorder recorder;
-    PortAudioSpeaker speaker;
+    
     return 0;
 }
 
