@@ -36,6 +36,7 @@ commEnum_t LoggedWindow::refresh(commEnum_t enumArg, std::string name)
     }
     if (enumArg != commEnum_t::IS_COMMUNICATING && usr.getInCommunication()) {
         usr.setInCommunication(false);
+        ui->labelCenter->setText("");
     }
     if (enumArg == commEnum_t::INCOMMING_CALL) {
         QString newName = QString::fromStdString("Incomming call from ") + QString::fromStdString(name);
@@ -143,6 +144,7 @@ void LoggedWindow::send_data(QString name)
 void LoggedWindow::on_endCallButton_clicked()
 {
     usr.setInCommunication(false);
+    ui->labelCenter->setText("");
     returnRefresh = commEnum_t::END_CALL;
 }
 
