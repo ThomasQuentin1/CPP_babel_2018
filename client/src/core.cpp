@@ -71,7 +71,7 @@ void Core::loop()
         if (this->comm.isCommunicating()) {
             argToSendToRefresh = commEnum_t::IS_COMMUNICATING;
             if (!this->audio)
-                this->audio = std::make_unique<IAudio>();
+                this->audio = std::make_unique<PortAudio>();
 
             auto inputsound = this->audio->receiveSound();
             if (inputsound)
