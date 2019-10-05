@@ -78,25 +78,27 @@ auto Communication::parseIncommingCall(std::string const &body) -> void {
 
 }
 
-auto Communication::refreshServer() -> void {
-    auto action = this->server_connection->recvAction();
+auto Communication::refreshServer(std::shared_ptr<packet::ActionDyn> action) -> void {
+    if (action == nullptr)
+        action = std::make_shared<packet::ActionDyn>(this->server_connection->recvAction());
 
-    switch (action.code()) {
+    switch (action->code()) {
         case packet::operation::INCOMMING_CALL:
-            this->parseIncommingCall(action.body());
+            this->parseIncommingCall(action->body());
             break;
         case packet::CALL_END:
             this->_isCalling = false;
+            this->client_connection = nullptr;
             break;
         case packet::operation::CALL_ACCEPT:
-			std::cout << "connecting to " << action.body() << ":" << this->outgoing_call_port << std::endl;
-            this->client_connection = std::make_shared<network::UdpConnectionNative>(action.body(), this->outgoing_call_port, true);
+			std::cout << "connecting to " << action->body() << ":" << this->outgoing_call_port << std::endl;
+            this->client_connection = std::make_shared<network::UdpConnectionNative>(action->body(), this->outgoing_call_port, true);
 			break;
         case packet::operation::DISCONNECT:
             throw ex::NetworkException("Server told you to disconnect", "communication refresh");
 			break;
         default:
-            std::cerr << "Unhandled operation recived " << action.code() << std::endl;
+            std::cerr << "Unhandled operation recived " << action->code() << std::endl;
     }
 }
 
@@ -131,6 +133,9 @@ auto Communication::login(std::string const &loginAndPassword) -> bool
     auto action = this->server_connection->recvAction();
     if (action.code() == packet::operation::OK) {
         return (true);
+    } else if (action.code() != packet::operation::KO) {
+        this->refreshServer(std::make_shared<packet::ActionDyn>(action));
+        return this->login(loginAndPassword);
     } else {
         return (false);
     }
@@ -142,15 +147,21 @@ auto Communication::signUp(std::string const &loginAndPassword) -> bool
     auto action = this->server_connection->recvAction();
     if (action.code() == packet::operation::OK) {
         return (true);
-    } else {
+    } else if (action.code() != packet::operation::KO) {
+        this->refreshServer(std::make_shared<packet::ActionDyn>(action));
+        return this->signUp(loginAndPassword);
+    } else
         return (false);
-    }
 }
 
 auto Communication::getOnlineUsers() -> std::string
 {
     this->server_connection->sendAction(packet::operation::GET_CONTACTS);
     auto resp = this->server_connection->recvAction();
+    if (resp.code() != packet::operation::DATA) {
+        this->refreshServer(std::make_shared<packet::ActionDyn>(resp));
+        return this->getOnlineUsers();
+    }
     return resp.body();
 }
 
