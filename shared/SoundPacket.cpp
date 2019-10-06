@@ -5,7 +5,7 @@
 #include <cstring>
 #include "SoundPacket.hpp"
 
-SoundPacket::SoundPacket(short _size_) : alloc_size(_size_), data_size(0) {
+SoundPacket::SoundPacket(int _size_) : alloc_size(_size_), data_size(0) {
     this->data = new byte[alloc_size];  
 }
 
