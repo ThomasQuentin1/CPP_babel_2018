@@ -15,7 +15,7 @@ public:
     IGui *gui;
 private:
 
-    Communication comm;
+    std::unique_ptr<Communication> comm;
     std::vector<std::string> stringToVector(std::string);
     std::unique_ptr<IAudio> audio;
     bool isLogged = false;
