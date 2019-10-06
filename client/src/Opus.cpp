@@ -8,11 +8,11 @@
 Opus::Opus() {
     int err;
     encoder = opus_encoder_create(audioConfig::sample_rate, audioConfig::channels, OPUS_APPLICATION_VOIP, &err);
-    if (err < 0)
+    if (err > 0)
         throw ex::SoundException("failed to initialize encoder: ", "Opus constructor");
 
     decoder = opus_decoder_create(audioConfig::sample_rate, audioConfig::channels, &err);
-    if (err<0)
+    if (err > 0)
         throw ex::SoundException("failed to initialize decoder: ", "Opus constructor");
 }
 
