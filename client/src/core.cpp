@@ -1,9 +1,11 @@
 #include "core.hpp"
+#include <shared/exceptions/UserException.hpp>
 
-Core::Core(int argc, char *argv[])
+Core::Core(int argc, char* argv[])
 {
- //   this->gui = std::make_unique<Gui>(argc, argv);
-//    std::cerr << gui.get() << std::endl;
+	if (argc < 3)
+		throw ex::UserException("not enough argument", "core constructor");
+	this->comm = std::make_unique<Communication>(argv[1], std::stoi(argv[2]));
     gui = new Gui(argc, argv);
 }
 
@@ -16,9 +18,9 @@ void Core::loop()
     int i = 0;
 
     while (true) {
-        comm.refresh();
-        if (comm.incommingCall() != "") {
-            names = comm.incommingCall();
+        comm->refresh();
+        if (comm->incommingCall() != "") {
+            names = comm->incommingCall();
             argToSendToRefresh = commEnum_t::INCOMMING_CALL;
             std::cout << names << " is calling me" << std::endl;
         }
@@ -28,19 +30,19 @@ void Core::loop()
         // Ce qui est envoyé au serveur en fonction du return du refresh
         switch (ret) {
             case commEnum_t::CALL:
-                comm.call(gui->getArgument());
+                comm->call(gui->getArgument());
                 break;
             case commEnum_t::ACCEPT_CALL:
-                comm.acceptCall();
+                comm->acceptCall();
                 break;
             case commEnum_t::DECLINE_CALL:
-                comm.declineCall();
+                comm->declineCall();
                 break;
             case commEnum_t::END_CALL:
-                comm.endCall();
+                comm->endCall();
                 break;
             case commEnum_t::TRY_LOGIN:
-                check = comm.login(gui->getArgument());
+                check = comm->login(gui->getArgument());
                 if (check == true) {
                     argToSendToRefresh = commEnum_t::CONNECTION_SUCCESS;
                     isLogged = true;
@@ -49,7 +51,7 @@ void Core::loop()
                 }
                 break;
             case commEnum_t::TRY_REGISTER:
-                check = comm.signUp(gui->getArgument());
+                check = comm->signUp(gui->getArgument());
                 if (check == true) {
                     argToSendToRefresh = commEnum_t::CONNECTION_SUCCESS;
                     isLogged = true;
@@ -59,29 +61,29 @@ void Core::loop()
                 break;
             case commEnum_t::LOGOUT:
                 isLogged = false;
-                comm.logout();
+                comm->logout();
                 break;
             default:
                 argToSendToRefresh = commEnum_t::NONE;
                 break;
         }
 
-        if (this->comm.isCommunicating()) {
+        if (this->comm->isCommunicating()) {
             argToSendToRefresh = commEnum_t::IS_COMMUNICATING;
             if (!this->audio)
                 this->audio = std::make_unique<PortAudio>();
 
             auto inputsound = this->audio->receiveSound();
             if (inputsound)
-                this->comm.sendSound(inputsound);
+                this->comm->sendSound(inputsound);
 
-            auto outputsound = this->comm.reciveSound();
+            auto outputsound = this->comm->reciveSound();
             if (outputsound) {
                 this->audio->sendSound(outputsound);
                 std::cout << "Sending sound to speaker" << std::endl;
             }
         } else {
-            if (comm.isCalling() == false && argToSendToRefresh == commEnum_t::NONE) {
+            if (comm->isCalling() == false && argToSendToRefresh == commEnum_t::NONE) {
                 argToSendToRefresh = commEnum_t::CALL_DECLINED;
             }
             this->audio = nullptr;
@@ -90,7 +92,7 @@ void Core::loop()
             i++;
             if (i >= 50000) {
                 i = 0;
-                gui->setOnlineContact(stringToVector(comm.getOnlineUsers()));
+                gui->setOnlineContact(stringToVector(comm->getOnlineUsers()));
             }
         }
     }
