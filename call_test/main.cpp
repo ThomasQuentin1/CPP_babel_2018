@@ -19,7 +19,7 @@ int main(int ac, char *av[]) try {
     //}
 
 	network::WindowsInit windows;
-	network::UdpConnectionNative connection("192.168.1.18", 4242, true);
+	network::UdpConnectionNative connection("192.168.1.18", 4242, false);
     //network::UdpConnectionNative connection(av[1], std::stoi(av[2]), !strcmp(av[3], "true"));
     //Opus encoder;
     auto vocal = std::make_unique<PortAudio>();

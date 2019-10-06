@@ -16,7 +16,7 @@
 
 class Communication {
 public:
-    explicit Communication(std::string const &ip = "10.14.58.90", short port = 4242);
+    explicit Communication(std::string const &ip = "192.168.1.20", short port = 4242);
 
     auto refresh() -> void;
 
