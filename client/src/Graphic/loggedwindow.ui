@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="2" column="0">
      <widget class="QScrollArea" name="scrollArea">
       <property name="widgetResizable">
        <bool>true</bool>
@@ -26,23 +26,37 @@
          <x>0</x>
          <y>0</y>
          <width>204</width>
-         <height>431</height>
+         <height>385</height>
         </rect>
        </property>
       </widget>
      </widget>
     </item>
-    <item row="1" column="0">
+    <item row="0" column="0">
+     <widget class="QLabel" name="titleBabel">
+      <property name="text">
+       <string>Babel</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
      <widget class="QLabel" name="labelCenter">
       <property name="text">
        <string>TextLabel</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="4" column="0">
      <widget class="QPushButton" name="endCallButton">
       <property name="text">
        <string>End call</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="contactListLabel">
+      <property name="text">
+       <string>Contact list :</string>
       </property>
      </widget>
     </item>

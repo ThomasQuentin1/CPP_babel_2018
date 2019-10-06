@@ -29,6 +29,8 @@ LoggedWindow::LoggedWindow(QWidget *parent) :
             "background-color: #4AC4FF;"
             "}");
     ui->endCallButton->hide();
+    ui->contactListLabel->setStyleSheet("color:white");
+    ui->titleBabel->setStyleSheet("color:white; qproperty-alignment: AlignCenter;");
     this->setStyleSheet("background-color:#123140");
 }
 
@@ -142,6 +144,8 @@ void LoggedWindow::insertAllContacts()
     QVBoxLayout* lastLayout = new QVBoxLayout();
 
     contentWidget->setLayout(layout);
+    lastLayout->addWidget(ui->titleBabel);
+    lastLayout->addWidget(ui->contactListLabel);
     lastLayout->addWidget(contentWidget);
     lastLayout->addWidget(ui->labelCenter);
     lastLayout->addWidget(ui->endCallButton);
