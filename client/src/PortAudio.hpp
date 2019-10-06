@@ -19,6 +19,8 @@ public:
     auto play() -> void;
     auto record() ->void;
     auto entryPoint() -> void;
+    auto readEntryPoint() -> void;
+    auto writeEntryPoint() -> void;
 
 protected:
 	PaStream* stream = nullptr;

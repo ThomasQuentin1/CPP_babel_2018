@@ -46,6 +46,8 @@ PortAudio::PortAudio() : _thread(this)
 	if (err != paNoError)
 		throw ex::SoundException("error");
 	err = Pa_StartStream(stream);
+
+	this->_thread.start();
 }
 
 auto PortAudio::receiveSound() -> std::shared_ptr<SoundPacket>
@@ -106,4 +108,14 @@ auto PortAudio::entryPoint() -> void {
         this->record();
         this->play();
     }
+}
+
+auto PortAudio::readEntryPoint() -> void {
+    while (this->_thread)
+        this->record();
+}
+
+auto PortAudio::writeEntryPoint() -> void {
+    while (this->_thread)
+        this->play();
 }

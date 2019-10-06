@@ -18,22 +18,21 @@ public:
     ~Thread();
     explicit operator bool();
     std::mutex & lock();
+    auto start() -> void;
 
 private:
     auto join() -> void;
     bool loop = true;
-    bool isThreadRunning = false;
-    std::shared_ptr<std::thread> thread;
-	std::mutex _lock;
+    int isThreadRunning = 0;
+    std::shared_ptr<std::thread> inThread;
+    std::shared_ptr<std::thread> outThread;
+    T *that;
+
+    std::mutex _lock;
 };
 
 template<typename T>
-Thread<T>::Thread(T *that) {
-    this->thread = std::make_shared<std::thread>([that]() -> void {that->entryPoint();});
-	if (!isThreadRunning)
-		this->isThreadRunning = true;
-	else
-		this->join();
+Thread<T>::Thread(T *_that) : that(_that) {
 }
 
 template<typename T>
@@ -50,13 +49,26 @@ Thread<T>::operator bool() {
 template<typename T>
 inline auto Thread<T>::lock() -> std::mutex &
 {
-	return this->_lock;
+    return this->_lock;
 }
 
 template<typename T>
 inline auto Thread<T>::join() -> void
 {
-	thread->join();
+    inThread->join();
+    outThread->join();
+}
+
+template<typename T>
+auto Thread<T>::start() -> void {
+    auto that = this->that;
+    this->inThread = std::make_shared<std::thread>([that]() -> void {that->readEntryPoint();});
+    this->outThread = std::make_shared<std::thread>([that]() -> void {that->writeEntryPoint(); });
+
+    if (isThreadRunning != 2)
+        this->isThreadRunning++;
+    else
+        this->join();
 }
 
 
