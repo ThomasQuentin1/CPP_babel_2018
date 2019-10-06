@@ -19,7 +19,7 @@ int main(int ac, char *av[]) try {
     //}
 
 	network::WindowsInit windows;
-	network::UdpConnectionNative connection("10.14.57.18", 4242, true);
+	network::UdpConnectionNative connection("192.168.1.18", 4242, true);
     //network::UdpConnectionNative connection(av[1], std::stoi(av[2]), !strcmp(av[3], "true"));
     //Opus encoder;
     auto vocal = std::make_unique<PortAudio>();
@@ -50,8 +50,8 @@ int main(int ac, char *av[]) try {
 			if (recv_stack.size() > 100)
 				recv_stack.pop_front();
 			std::shared_ptr<packet::data> data = connection.recv<packet::data>();
-			if (data->magic == 0XDA) {
-				auto packet = std::make_shared<SoundPacket>(data->size);
+			if (data && data->magic == 0XDA) {
+				auto packet = std::make_shared<SoundPacket>(10000);
 				packet->copyFrom(data->body, data->size);
 				recv_stack.push_back((packet));
 			}
@@ -60,10 +60,12 @@ int main(int ac, char *av[]) try {
 			std::shared_ptr<SoundPacket> sound_packet = (send_stack.front());
 			send_stack.pop_front();
 
-			packet::data sound_data;
+			packet::data sound_data= {};
 			sound_packet->copyTo(sound_data.body, sound_packet->dataSize());
 			sound_data.size = sound_packet->dataSize();
 			connection.sendData((bytes)&sound_data, sizeof(packet::data));
+			std::cout<<"SendData"<<std::endl;
+
 		}
 	}
 }

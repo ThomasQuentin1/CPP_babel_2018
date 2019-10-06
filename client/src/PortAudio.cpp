@@ -71,7 +71,7 @@ auto PortAudio::play() -> void
         return;
     }
     std::shared_ptr<SoundPacket> sound = (output_stack.front());
-    Pa_WriteStream(stream, sound->ptr<void*>(), audioConfig::frames_per_buffer);
+    Pa_WriteStream(stream, sound->ptr<void*>(), 512);
     output_stack.pop_front();
     _thread.lock().unlock();
 }

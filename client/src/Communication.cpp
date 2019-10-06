@@ -113,19 +113,18 @@ auto Communication::refreshClient() -> void {
 			std::cout << "Reciving audio data" << std::endl;
             std::shared_ptr<SoundPacket> packet = std::make_shared<SoundPacket>(sizeof(paFloat32) * audioConfig::frames_per_buffer * 10);
             packet->copyFrom(data->body, data->size);
-            this->recv_stack.push_back((packet));
+            encoder->decode((packet));
+            this->recv_stack.push_back(packet);
         }
     }
-
     if (!this->send_stack.empty()) {
 		std::shared_ptr<SoundPacket> sound_packet = (send_stack.front());
 		send_stack.pop_front();
-
 		packet::data sound_data;
 		sound_packet->copyTo(sound_data.body, sound_packet->dataSize());
 		sound_data.size = sound_packet->dataSize();
+		encoder->encode(sound_packet);
 		this->client_connection->sendData((bytes)&sound_data, sizeof(packet::data));
-
     }
 }
 

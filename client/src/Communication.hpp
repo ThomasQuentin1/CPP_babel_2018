@@ -10,6 +10,8 @@
 #include "shared/headers.hpp"
 #include "shared/SoundPacket.hpp"
 #include "shared/packets.hpp"
+#include "IEncoder.hpp"
+#include "Opus.hpp"
 
 
 class Communication {
@@ -45,22 +47,17 @@ private:
     auto parseIncommingCall(std::string const &body) -> void;
     auto refreshServer(std::shared_ptr<packet::ActionDyn> action = nullptr) -> void;
     auto refreshClient() -> void;
-
     std::string incomming_call_username;
     std::string incomming_call_ip;
     short incomming_call_port = 0;
-
     std::string outgoing_call_ip;
     short outgoing_call_port = 0;
-
     std::shared_ptr<network::ITcpConnection> server_connection;
     std::shared_ptr<network::IUdpConnection> client_connection;
-
     std::deque<std::shared_ptr<SoundPacket>> send_stack;
     std::deque<std::shared_ptr<SoundPacket>> recv_stack;
-
     bool _isCalling = false;
-
+    std::shared_ptr<IEncoder> encoder = std::make_unique<Opus>();
 };
 
 

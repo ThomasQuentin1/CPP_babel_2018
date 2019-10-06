@@ -22,6 +22,9 @@ Opus::~Opus() {
 }
 
 auto Opus::encode(std::shared_ptr<SoundPacket> &packet) -> int {
+    if (packet->dataSize() < -1)
+        return -1;
+    std::cout<<"OPUS ENLEVE MOI"<<std::endl;
     int nbBytes = opus_encode_float(encoder, packet->ptr<float*>(), audioConfig::frames_per_buffer,
                                     this->temp_buffer, packet->dataSize());
     if (nbBytes < 0)
@@ -31,6 +34,9 @@ auto Opus::encode(std::shared_ptr<SoundPacket> &packet) -> int {
 }
 
 auto Opus::decode(std::shared_ptr<SoundPacket> &packet) -> int {
+    if (packet->dataSize() < -1)
+        return -1;
+    std::cout<<"OPUS ENLEVE MOI"<<std::endl;
     int nbBytes = opus_decode_float(decoder, packet->ptr<bytes>(), packet->dataSize(),
                                     reinterpret_cast<float *>(this->temp_buffer), audioConfig::frames_per_buffer, 0 * audioConfig::channels);
     if (nbBytes < 0)
