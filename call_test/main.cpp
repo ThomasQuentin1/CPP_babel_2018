@@ -4,13 +4,13 @@
 
 #include <shared/network/UdpConnectionNative.hpp>
 #include "shared/headers.hpp"
-#include <client/src/PortAudioRecorder.hpp>
-#include <client/src/PortAudioSpeaker.hpp>
 #include <client/src/Opus.hpp>
 #include <shared/packets.hpp>
 #include <shared/exceptions/NetworkException.hpp>
 #include <shared/network/WindowsInit.hpp>
 #include <cstring>
+#include <client/src/IAudio.hpp>
+#include <client/src/PortAudio.hpp>
 
 int main(int ac, char *av[]) try {
     //if (ac != 4) {
@@ -19,11 +19,10 @@ int main(int ac, char *av[]) try {
     //}
 
 	network::WindowsInit windows;
-	network::UdpConnection connection("10.14.57.18", 4242, true);
-    //network::UdpConnection connection(av[1], std::stoi(av[2]), !strcmp(av[3], "true"));
+	network::UdpConnectionNative connection("10.14.57.18", 4242, true);
+    //network::UdpConnectionNative connection(av[1], std::stoi(av[2]), !strcmp(av[3], "true"));
     //Opus encoder;
-    PortAudioRecorder recorder;
-    PortAudioSpeaker player;
+    auto vocal = std::make_unique<PortAudio>();
 
 	std::deque<std::shared_ptr<SoundPacket>> send_stack;
 	std::deque<std::shared_ptr<SoundPacket>> recv_stack;
@@ -34,7 +33,7 @@ int main(int ac, char *av[]) try {
 	while (true) {
 
 		// Get recorded sounds from mic
-		auto recorded_sound = recorder.receiveSound();
+		auto recorded_sound = vocal->receiveSound();
 		if (recorded_sound != nullptr)
 			send_stack.push_back((recorded_sound));
 		
@@ -42,7 +41,7 @@ int main(int ac, char *av[]) try {
 		if (!recv_stack.empty()) {
 			auto recived_sound = (recv_stack.front());	
 			recv_stack.pop_front();
-			player.sendSound((recived_sound));
+            vocal->sendSound((recived_sound));
 		}
 
 
@@ -50,7 +49,7 @@ int main(int ac, char *av[]) try {
 			std::cout << "Recived some data" << std::endl;
 			if (recv_stack.size() > 100)
 				recv_stack.pop_front();
-			auto data = connection.recv<packet::data>();
+			std::shared_ptr<packet::data> data = connection.recv<packet::data>();
 			if (data->magic == 0XDA) {
 				auto packet = std::make_shared<SoundPacket>(data->size);
 				packet->copyFrom(data->body, data->size);

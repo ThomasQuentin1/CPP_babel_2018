@@ -9,14 +9,13 @@ Core::Core(int argc, char *argv[])
 
 void Core::loop()
 {
-    int whilecond = 0;
     bool check = false;
     std::string names = "";
     commEnum_t ret = commEnum_t::NONE;
     commEnum_t argToSendToRefresh = commEnum_t::NONE;
     int i = 0;
 
-    while (whilecond == 0) {
+    while (true) {
         comm.refresh();
         if (comm.incommingCall() != "") {
             names = comm.incommingCall();
@@ -41,7 +40,6 @@ void Core::loop()
                 comm.endCall();
                 break;
             case commEnum_t::TRY_LOGIN:
-                std::cout << "login" << std::endl;
                 check = comm.login(gui->getArgument());
                 if (check == true) {
                     argToSendToRefresh = commEnum_t::CONNECTION_SUCCESS;
@@ -51,10 +49,10 @@ void Core::loop()
                 }
                 break;
             case commEnum_t::TRY_REGISTER:
-                std::cout << "register" << std::endl;
                 check = comm.signUp(gui->getArgument());
                 if (check == true) {
                     argToSendToRefresh = commEnum_t::CONNECTION_SUCCESS;
+                    isLogged = true;
                 } else {
                     argToSendToRefresh = commEnum_t::CONNECTION_FAILED;
                 }
@@ -78,10 +76,10 @@ void Core::loop()
                 this->comm.sendSound(inputsound);
 
             auto outputsound = this->comm.reciveSound();
-			if (outputsound) {
-				this->audio->sendSound(outputsound);
-				std::cout << "Sending sound to speaker" << std::endl;
-			}
+            if (outputsound) {
+                this->audio->sendSound(outputsound);
+                std::cout << "Sending sound to speaker" << std::endl;
+            }
         } else {
             if (comm.isCalling() == false && argToSendToRefresh == commEnum_t::NONE) {
                 argToSendToRefresh = commEnum_t::CALL_DECLINED;

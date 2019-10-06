@@ -8,16 +8,16 @@
 
 #include <deque>
 #include <shared/network/TcpConnectionNative.hpp>
-#include <shared/network/TcpServer.hpp>
+#include <shared/network/TcpServerNative.hpp>
 #include "Client.hpp"
 
 class BabelServer {
 public:
-    BabelServer(short port);
+    explicit BabelServer(short port);
     auto refresh() -> int;
 
 private:
-    network::TcpServer server;
+    std::unique_ptr<network::ITcpServer> server;
     std::deque<std::shared_ptr<Client>> clients;
 };
 

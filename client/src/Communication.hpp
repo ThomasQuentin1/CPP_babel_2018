@@ -14,7 +14,7 @@
 
 class Communication {
 public:
-    explicit Communication(std::string const &ip = "10.14.58.90", short port = 4243);
+    explicit Communication(std::string const &ip = "127.0.0.1", short port = 4000);
 
     auto refresh() -> void;
 
@@ -43,7 +43,7 @@ public:
 
 private:
     auto parseIncommingCall(std::string const &body) -> void;
-    auto refreshServer() -> void;
+    auto refreshServer(std::shared_ptr<packet::ActionDyn> action = nullptr) -> void;
     auto refreshClient() -> void;
 
     std::string incomming_call_username;

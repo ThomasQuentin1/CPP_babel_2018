@@ -10,6 +10,32 @@ ConnectionDialog::ConnectionDialog(QWidget *parent) :
     ui(new Ui::ConnectionDialog)
 {
     ui->setupUi(this);
+    ui->loginButton->setStyleSheet(
+            "QPushButton {"
+            "border-radius: 4px;"
+            "color: white;"
+            "background-color: #3792BF;"
+            "}"
+            "QPushButton:pressed {"
+            "background-color: #4AC4FF;"
+            "}"
+    );
+    ui->registerButton->setStyleSheet(
+            "QPushButton {"
+            "border-radius: 4px;"
+            "color: white;"
+            "background-color: #3792BF;"
+            "}"
+            "QPushButton:pressed {"
+            "background-color: #4AC4FF;"
+            "}"
+    );
+    ui->labelPassword->setStyleSheet("color:white");
+    ui->labelUsername->setStyleSheet("color:white");
+    ui->EditLineUsername->setStyleSheet("color:white; background-color:#256180");
+    ui->EditLLinePassword->setStyleSheet("color:white; background-color:#256180");
+    ui->EditLLinePassword->setEchoMode(QLineEdit::Password);
+    ui->projectNameLabel->setStyleSheet("color:white");
 }
 
 ConnectionDialog::~ConnectionDialog()
