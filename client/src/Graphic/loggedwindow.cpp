@@ -18,7 +18,18 @@ LoggedWindow::LoggedWindow(QWidget *parent) :
     setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
     ui->labelCenter->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
     ui->labelCenter->setText("");
+    ui->labelCenter->setStyleSheet("color:white");
+    ui->endCallButton->setStyleSheet(
+            "QPushButton {"
+            "border-radius: 4px;"
+            "color: white;"
+            "background-color: #3792BF;"
+            "}"
+            "QPushButton:pressed {"
+            "background-color: #4AC4FF;"
+            "}");
     ui->endCallButton->hide();
+    this->setStyleSheet("background-color:#123140");
 }
 
 commEnum_t LoggedWindow::refresh(commEnum_t enumArg, std::string name)
@@ -41,7 +52,8 @@ commEnum_t LoggedWindow::refresh(commEnum_t enumArg, std::string name)
     if (enumArg == commEnum_t::INCOMMING_CALL) {
         QString newName = QString::fromStdString("Incomming call from ") + QString::fromStdString(name);
         usr.setContactInCommunication(name);
-        int reponse = QMessageBox::question(this, tr("Incomming call"), tr(name.c_str()), QMessageBox::Yes | QMessageBox::No);
+        QString str = QString("<p style='color:white'>" + QString::fromStdString(name) +"</p>");
+        int reponse = QMessageBox::question(this, tr("Incomming call"), str, QMessageBox::Yes | QMessageBox::No);
         if (reponse == QMessageBox::Yes) {
             returnRefresh = commEnum_t::ACCEPT_CALL;
             usr.setInCommunication(true);
@@ -100,7 +112,15 @@ void LoggedWindow::insertAllContacts()
 
         QLabel *label = new QLabel;
         QPushButton *button = new QPushButton();
-
+        button->setStyleSheet(            "QPushButton {"
+                                          "border-radius: 4px;"
+                                          "color: white;"
+                                          "background-color: #3792BF;"
+                                          "}"
+                                          "QPushButton:pressed {"
+                                          "background-color: #4AC4FF;"
+                                          "}");
+        label->setStyleSheet("color:white");
         label->setText(QString::fromStdString(name));
         button->setText(QString::fromStdString("Call"));
 
